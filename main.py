@@ -14,14 +14,15 @@ Write out how main works:
 '''
 write what the functions do in a single like to recap what you have so far, and orient everything under a main() function.
 
+extract_view_headers - extracts and formats view headers (w/ spacing) into a single string for main()
+
 sort_looker_field_parameters - sorts a view fields parameters. Returns field_name, sorted_field_parameters_dict
 ordered_dimensions - this is going to be the loop part of 2a that causes sort_looker_field_parameters to loop.
 (** note: we can consolidate this into the sort_looker_field_parameters function **)
 '''
 # loaded_lkml - get lkml view file contents from lookml_string_file
 with open('lookml_string_file.txt', 'r') as file:
-    contents = file.read()
-    loaded_lkml = lkml.load(contents)['views'][0]
+    loaded_lkml = lkml.load(file.read())['views'][0]
 
 # keys = field type names to search for in the loaded_lkml, values = how to print the section headers for that field
 field_types_dictionary = {
@@ -32,8 +33,6 @@ field_types_dictionary = {
     "parameters_and_filters": "PARAMETERS / FILTERS", #not actual field types
     "sets": "SETS" #not actual field types
 }
-
-
 
 ############ Section 1 ###############
 # https://candlescience.slab.com/posts/look-ml-standards-vwd6xr1z#:~:text=2-,Ordering,-of%20dimensions%3A
@@ -149,8 +148,81 @@ fields_dictionary = {}
 # print(field_types_dictionary.keys())
 find_field_types(loaded_lkml, field_types_dictionary)
 
-# for key in loaded_lkml['views'][0].keys():
-#     print(key)
+# def extract_view_file_header(loaded_lkml, field_types_dictionary):
+#     
+#     for key in loaded_lkml.keys():
+
+#         if key not in field_types_dictionary.keys():
+
+
+
+
+
+
+# experimental version of headers (and main) that implements your idea: 
+#idea: 
+'''
+instead of writing to the file, why dont you output (return) a string that represents
+the correctly formatted and spaced view file headers? 
+then you can create the main function and have it:
+    - call extract_view_headers
+    - print the string to the file
+'''
+def extract_view_headers(loaded_lkml, field_types_dictionary):
+    ''' function that removes the view file header elements from the
+    loaded_lkml dictionary and writes them to a new file. This will capture 
+    any keys that are not listed in the field_types_dictionary.'''
+    view_headers = {}
+    for key, value in loaded_lkml.items():
+        if key not in field_types_dictionary:
+            view_headers[key] = value
+    view_name = view_headers['name']
+    del view_headers['name']
+    view_headers['sql_table_name'] = view_headers['sql_table_name'] + ' ;;'
+    with open('ordered_lkml_file.txt', 'w') as file:
+        file.write(f'view: {view_name} ' + '{\n')
+        for key, value in view_headers.items():
+            file.write(f"  {key}: {value}\n")
+
+# removes and writes view headers to new file 
+def extract_view_headers(loaded_lkml, field_types_dictionary):
+    ''' function that removes the view file header elements from the
+    loaded_lkml dictionary, formats them, and writes the result to 
+    'header_string' variable. This will capture any keys from the 
+    loaded_lkml that are not in the field_types_dictionary.'''
+    view_headers = {}
+    for key, value in loaded_lkml.items(): #find keys not in field types dict
+        if key not in field_types_dictionary:
+            view_headers[key] = value
+    view_name = view_headers['name'] #extract and remove name
+    del view_headers['name']
+    view_headers['sql_table_name'] = view_headers['sql_table_name'] + ' ;;' #add semicolons
+    result = ""
+    for key, value in view_headers.items(): #create correctly formatted view file header string
+        result += f"{key}: {value}\n"
+        header_string = f'view: {view_name}' + ' {\n  ' + result
+        print(header_string)
+    return header_string
+
+def main(loaded_lkml, field_types_dictionary):
+    # extract and format view file headers
+    footer = '\n}'
+    formatted_header_string = extract_view_headers(loaded_lkml, field_types_dictionary)
+    with open('ordered_lkml_file.txt', 'w') as file:
+        #write view file headers
+        file.write(formatted_header_string)
+        #TBD: write view file contents
+        
+        #write view file footer (})
+        file.write(footer)
+
+main(loaded_lkml, field_types_dictionary)
+
+
+    #     for key, value in view_headers.items():
+    #         file.write(f"  {key}: {value}\n")
+
+
 
 # 1. get the name of the view and the sql table name
 # view_label = loaded_lkml['views'][0]['label']

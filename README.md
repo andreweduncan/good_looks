@@ -105,15 +105,16 @@ correctly to be able to be loaded, notify the user with a message that </br>
 tells them that they did not upload a view file that the lkml module </br>
 could parse. </br></br>
 
-- Do this piece [already in the "How It Works" section](#how-it-works). </br>
+- Write the main() function [already in the "How It Works" section](#how-it-works). </br>
 a function that references a dictionary of potential field types </br> 
 (the key is the field name and the value is a capitalized plural version </br>
 used to create the field header) is used to:
-   1. Iterate through each field type in the dataframe, and keep going </br>
+   1. Write the header for the view file into a new file. </br>
+   2. Iterate through each field type in the dataframe, and keep going </br>
    to the next type if the current one is empty. </br>
-   2. Perform a series of grouping, sorting, and ordering operations on them. </br>
-   3. Write the results to a dictionary.
-   4. Write that dictionary into new file with headers and footers. </br>
+   3. Perform a series of grouping, sorting, and ordering operations on them. </br>
+   4. Write the results to a dictionary.
+   5. Write that dictionary into new file with headers and footers. </br>
 </br></br>
 - add on Regex-based validation for small rules that are commonly missed, </br>
 such as:

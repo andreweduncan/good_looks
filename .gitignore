@@ -159,5 +159,8 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-#file containing the lkml viie information to be parsed
+#file containing the lkml view information to be parsed
 lookml_string_file.txt
+
+#file containing the output of the program when run on the lkml file
+ordered_lkml_file.txt
