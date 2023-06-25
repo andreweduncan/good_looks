@@ -1,72 +1,48 @@
-from pprint import pprint
-import os
 import lkml
-# from lkml_project_functions import *
-
+'''
+HOW IT WORKS:
+# loaded_lkml - provides the view file info to parse
+# main() - performs several operations on the loaded_lkml
+Write out how main works:
+    1. Write the header of the view to the final file (TBD)
+    2. for loop: get field type from the loaded_lkml using field_types_dictionary
+            a. run sorting operations on each fields' parameters
+            b. sort the fields alphabetically
+            c. output to the final file
+'''
 
 '''
-the field_types_dictionary provides two things:
-1. the key represents a field type name that can be used to search the contents
-of the loaded lkml dictionary.
-eg. dimensions on a single view file can be found via loaded_lkml['views'][0]['dimensions']
+write what the functions do in a single like to recap what you have so far, and orient everything under a main() function.
 
-2. the value represents the field header that will be printed above the organized field in 
-the final product. You can test this by calling the "centered_header" function on it.
-
-Example:
-for value in field_types_dictionary.values():
-    centered_header(value),print('\n')
-
-The end goal of this is to be able to process a dictionary to find the matching keys,
-perform a series of operations on those keys, and then print the header and contents
+sort_looker_field_parameters - sorts a view fields parameters. Returns field_name, sorted_field_parameters_dict
+ordered_dimensions - this is going to be the loop part of 2a that causes sort_looker_field_parameters to loop.
+(** note: we can consolidate this into the sort_looker_field_parameters function **)
 '''
+# loaded_lkml - get lkml view file contents from lookml_string_file
+with open('lookml_string_file.txt', 'r') as file:
+    contents = file.read()
+    loaded_lkml = lkml.load(contents)['views'][0]
+
+# keys = field type names to search for in the loaded_lkml, values = how to print the section headers for that field
 field_types_dictionary = {
     "dimension_groups": "DIMENSION GROUPS",
     "dimensions": "DIMENSIONS",
-    "measures": "MEASURES"
+    "measures": "MEASURES",
+    "primary_key": "PRIMARY KEY", #not actual field types
+    "parameters_and_filters": "PARAMETERS / FILTERS", #not actual field types
+    "sets": "SETS" #not actual field types
 }
 
-# Non field-type headers
-pk_header = '''
-  ##########################
-  ##     PRIMARY KEY      ##
-  ##########################'''
-
-parameters_and_filters_header = '''
-  ##########################
-  ## PARAMETERS / FILTERS ##
-  ##########################'''
-
-sets_header = '''
-  ##########################
-  ##         SETS         ##
-  ##########################'''
-
-'''
-Section Overview
-Precursor variables and loading lkml
-1. Sort the dimensions in a looker field according to the CS style guide.
-2. general work for loading the lkml file
-'''
-file_path = 'lookml_string_file.txt'
-
-def load_lkml_contents():
-    ''' initiates the lkml loading process from the text file and creates the
-    loaded_lkml variable'''
-    with open(file_path, 'r') as file:
-        contents = file.read()
-        loaded_contents = lkml.load(contents)
-    return loaded_contents
 
 
 ############ Section 1 ###############
 # https://candlescience.slab.com/posts/look-ml-standards-vwd6xr1z#:~:text=2-,Ordering,-of%20dimensions%3A
 
-def sort_looker_field_dimensions(dimension_dict):
+def sort_looker_field_parameters(field):
     '''this function correctly orders the dimensions in a looker field according to the CS style guide.
     Be aware that the field name itself is also contained in this dictionary at the end, and will
     need to be extracted out. '''
-    lkml_field_dimension_order = [
+    lkml_field_parameters_order = [
         'label', 
         'description', 
         'type', 
@@ -79,11 +55,11 @@ def sort_looker_field_dimensions(dimension_dict):
         'group_label', 
         'primary_key', 
         'hidden']
-    dictionary_name = dimension_dict['name']
-    del dimension_dict['name']
-    sorted_keys = sorted(dimension_dict.keys(), key=lambda k: lkml_field_dimension_order.index(k) if k in lkml_field_dimension_order else len(lkml_field_dimension_order))
-    sorted_dictionary = {key: dimension_dict[key] for key in sorted_keys}
-    return dictionary_name, sorted_dictionary
+    field_name = field['name']
+    del field['name']
+    sorted_keys = sorted(field.keys(), key=lambda k: lkml_field_dimension_order.index(k) if k in lkml_field_dimension_order else len(lkml_field_dimension_order))
+    sorted_field_parameters_dict = {key: field[key] for key in sorted_keys}
+    return field_name, sorted_field_parameters_dict
 ########### END Section 1 ############
 
 
@@ -95,7 +71,7 @@ def ordered_dimensions(field_dictionary):
     the input to this function is the loaded lkml, pointed at the field type section of your choice.
     For the example file, pointing it at 'dimensions' looks like: loaded_lkml['views'][0]['dimensions']'''
     for dimension in field_dictionary:
-        key, value = sort_looker_field_dimensions(dimension)
+        key, value = sort_looker_field_parameters(dimension)
         fields_dictionary[key] = value
     return fields_dictionary
 ########### END Section 2 ############
@@ -166,8 +142,6 @@ def find_field_types(dictionary, field_types_dictionary):
 # create a dictionary to store the ordered field results
 fields_dictionary = {}
 
-# creates the loaded lkml for a single-view file
-loaded_lkml = load_lkml_contents()['views'][0]
 
 
 
@@ -184,15 +158,6 @@ find_field_types(loaded_lkml, field_types_dictionary)
 
 # get dimensions, sort them, put the result in "fields dictionary"
 # ordered_dimensions(loaded_lkml['views'][0]['dimensions'])
-
-
-# for value in field_types_dictionary.values():
-#     centered_header(value),print('\n')
-
-
-
-
-
 
 
 
