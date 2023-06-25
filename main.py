@@ -54,7 +54,6 @@ def extract_view_headers(loaded_lkml, field_types_dictionary):
     for key, value in view_headers.items(): #create correctly formatted view file header string
         result += f"{key}: {value}\n"
         header_string = f'view: {view_name}' + ' {\n  ' + result
-        print(header_string)
     return header_string
 
 
@@ -162,15 +161,13 @@ def find_field_types(dictionary, field_types_dictionary):
 
 def main(loaded_lkml, field_types_dictionary):
     # extract and format view file headers
+    header = extract_view_headers(loaded_lkml, field_types_dictionary)
+    body = "" #TBD
     footer = '\n}'
-    formatted_header_string = extract_view_headers(loaded_lkml, field_types_dictionary)
+    formatted_view = header + body + footer
     with open('ordered_lkml_file.txt', 'w') as file:
-        #write view file headers
-        file.write(formatted_header_string)
-        #TBD: write view file contents
-
-        #write view file footer (})
-        file.write(footer)
+        file.write(formatted_view)
+    print(formatted_view)
 
 
 # create a dictionary to store the ordered field results
@@ -182,18 +179,6 @@ find_field_types(loaded_lkml, field_types_dictionary)
 
 main(loaded_lkml, field_types_dictionary)
 
-
-    #     for key, value in view_headers.items():
-    #         file.write(f"  {key}: {value}\n")
-
-
-
-# 1. get the name of the view and the sql table name
-# view_label = loaded_lkml['views'][0]['label']
-# sql_table_name = loaded_lkml['views'][0]['sql_table_name']
-
-# get dimensions, sort them, put the result in "fields dictionary"
-# ordered_dimensions(loaded_lkml['views'][0]['dimensions'])
 
 
 
