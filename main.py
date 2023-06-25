@@ -37,6 +37,27 @@ field_types_dictionary = {
 ############ Section 1 ###############
 # https://candlescience.slab.com/posts/look-ml-standards-vwd6xr1z#:~:text=2-,Ordering,-of%20dimensions%3A
 
+# removes and writes view headers to new file 
+def extract_view_headers(loaded_lkml, field_types_dictionary):
+    ''' function that removes the view file header elements from the
+    loaded_lkml dictionary, formats them, and writes the result to 
+    'header_string' variable. This will capture any keys from the 
+    loaded_lkml that are not in the field_types_dictionary.'''
+    view_headers = {}
+    for key, value in loaded_lkml.items(): #find keys not in field types dict
+        if key not in field_types_dictionary:
+            view_headers[key] = value
+    view_name = view_headers['name'] #extract and remove name
+    del view_headers['name']
+    view_headers['sql_table_name'] = view_headers['sql_table_name'] + ' ;;' #add semicolons
+    result = ""
+    for key, value in view_headers.items(): #create correctly formatted view file header string
+        result += f"{key}: {value}\n"
+        header_string = f'view: {view_name}' + ' {\n  ' + result
+        print(header_string)
+    return header_string
+
+
 def sort_looker_field_parameters(field):
     '''this function correctly orders the dimensions in a looker field according to the CS style guide.
     Be aware that the field name itself is also contained in this dictionary at the end, and will
@@ -138,71 +159,6 @@ def find_field_types(dictionary, field_types_dictionary):
     print(f"Found field types: {found_values}.\n Also found unexpected field types: {unexpected_values}")
 
 
-# create a dictionary to store the ordered field results
-fields_dictionary = {}
-
-
-
-
-
-# print(field_types_dictionary.keys())
-find_field_types(loaded_lkml, field_types_dictionary)
-
-# def extract_view_file_header(loaded_lkml, field_types_dictionary):
-#     
-#     for key in loaded_lkml.keys():
-
-#         if key not in field_types_dictionary.keys():
-
-
-
-
-
-
-# experimental version of headers (and main) that implements your idea: 
-#idea: 
-'''
-instead of writing to the file, why dont you output (return) a string that represents
-the correctly formatted and spaced view file headers? 
-then you can create the main function and have it:
-    - call extract_view_headers
-    - print the string to the file
-'''
-def extract_view_headers(loaded_lkml, field_types_dictionary):
-    ''' function that removes the view file header elements from the
-    loaded_lkml dictionary and writes them to a new file. This will capture 
-    any keys that are not listed in the field_types_dictionary.'''
-    view_headers = {}
-    for key, value in loaded_lkml.items():
-        if key not in field_types_dictionary:
-            view_headers[key] = value
-    view_name = view_headers['name']
-    del view_headers['name']
-    view_headers['sql_table_name'] = view_headers['sql_table_name'] + ' ;;'
-    with open('ordered_lkml_file.txt', 'w') as file:
-        file.write(f'view: {view_name} ' + '{\n')
-        for key, value in view_headers.items():
-            file.write(f"  {key}: {value}\n")
-
-# removes and writes view headers to new file 
-def extract_view_headers(loaded_lkml, field_types_dictionary):
-    ''' function that removes the view file header elements from the
-    loaded_lkml dictionary, formats them, and writes the result to 
-    'header_string' variable. This will capture any keys from the 
-    loaded_lkml that are not in the field_types_dictionary.'''
-    view_headers = {}
-    for key, value in loaded_lkml.items(): #find keys not in field types dict
-        if key not in field_types_dictionary:
-            view_headers[key] = value
-    view_name = view_headers['name'] #extract and remove name
-    del view_headers['name']
-    view_headers['sql_table_name'] = view_headers['sql_table_name'] + ' ;;' #add semicolons
-    result = ""
-    for key, value in view_headers.items(): #create correctly formatted view file header string
-        result += f"{key}: {value}\n"
-        header_string = f'view: {view_name}' + ' {\n  ' + result
-        print(header_string)
-    return header_string
 
 def main(loaded_lkml, field_types_dictionary):
     # extract and format view file headers
@@ -212,9 +168,17 @@ def main(loaded_lkml, field_types_dictionary):
         #write view file headers
         file.write(formatted_header_string)
         #TBD: write view file contents
-        
+
         #write view file footer (})
         file.write(footer)
+
+
+# create a dictionary to store the ordered field results
+fields_dictionary = {}
+
+# print(field_types_dictionary.keys())
+find_field_types(loaded_lkml, field_types_dictionary)
+
 
 main(loaded_lkml, field_types_dictionary)
 
