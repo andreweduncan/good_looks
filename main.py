@@ -52,8 +52,8 @@ def extract_view_headers(loaded_lkml, field_types_dictionary):
     view_headers['sql_table_name'] = view_headers['sql_table_name'] + ' ;;' #add semicolons
     result = ""
     for key, value in view_headers.items(): #create correctly formatted view file header string
-        result += f"{key}: {value}\n"
-        header_string = f'view: {view_name}' + ' {\n  ' + result
+        result += f"  {key}: {value}\n"
+        header_string = f'view: {view_name}' + ' {\n' + result
     return header_string
 
 
