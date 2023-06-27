@@ -234,6 +234,10 @@ main(loaded_lkml)
 
 
 
+# right now:
+
+
+
 
 
 
@@ -309,23 +313,6 @@ the_list = [
     {'type': 'number', 'description': 'Carton id code. This number is unique to each individual box that we pack and ship out.', 'sql': '${TABLE}.carton_id', 'name': 'carton_id'}, {'description': 'Day of week (Eastern Time) that a carton was packed', 'type': 'string', 'sql': '${TABLE}.day_of_week', 'name': 'day_of_week'}, {'description': 'hour of day (Eastern Time) that a carton was packed', 'type': 'number', 'sql': '${TABLE}.hour_of_day', 'name': 'hour_of_day'}, {'description': 'ID of order that this package belongs to', 'type': 'number', 'sql': '${TABLE}.order_id', 'name': 'order_id'}, {'description': 'Name of warehouse where carton was packed', 'type': 'string', 'sql': '${TABLE}.warehouse', 'name': 'warehouse'}, {'description': 'weight in pounds of the completed packed carton', 'type': 'number', 'sql': '${TABLE}.lb_weight', 'name': 'lb_weight'}]
 
 
-def sort_field_type(field_type):
-    fields_dictionary = {}
-    body_string = '\n' + '#'*44 + '\n####### CENTERED HEADER DUMMY STRING #######\n' + '#'*44 + '\n'
-    for field in loaded_lkml[field_type]:
-        key, value = sort_field_parameters(field) # sort field parameters of a field
-        fields_dictionary[key] = value # add that field to the fields dictionary
-    sorted(fields_dictionary.items()) # alphabetize dictionary fields by name
-    for key, value in fields_dictionary.items(): # add field type and name
-        body_string = body_string + (f'\n  {field_type}: {key} ' + '{')
-        for parameter, contents  in value.items():
-            body_string += (f'\n    {parameter}: {contents}')
-        body_string += ('\n  }\n')
-    print(body_string)
-    return body_string
-
-
-
 
 
 
@@ -347,8 +334,30 @@ def print_field_elements(field_type,dictionary):
         print(f'Field Type Invalid:\n you entered: {field_type}. valid field types are {field_type_list}')
         return
 
+def sort_field_type(field_type):
+    fields_dictionary = {}
+    body_string = '\n' + '#'*44 + '\n####### CENTERED HEADER DUMMY STRING #######\n' + '#'*44 + '\n'
+    for field in loaded_lkml[field_type]:
+        key, value = sort_field_parameters(field) # sort field parameters of a field
+        fields_dictionary[key] = value # add that field to the fields dictionary
+    sorted(fields_dictionary.items()) # alphabetize dictionary fields by name
+    for key, value in fields_dictionary.items(): # add field type and name
+        body_string = body_string + (f'\n  {field_type}: {key} ' + '{')
+        for parameter, contents  in value.items():
+            body_string += (f'\n    {parameter}: {contents}')
+        body_string += ('\n  }\n')
+    print(body_string)
+    return body_string
 
 
+sort_field_type('dimensions')
+
+'''
+Todo: Create a second copy of sorted field type that takes 
+a field type and a lkml_field_header_name and works just like the first version.
+
+We can then input that shit into a loop that appends the header to the rest of the body contents correctly
+'''
 
 # print(loaded_lkml)
 
