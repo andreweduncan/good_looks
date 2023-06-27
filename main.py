@@ -116,7 +116,6 @@ def extract_view_headers(loaded_lkml):
         header_string = f'view: {view_name}' + ' {\n' + result
     return header_string
 
-print(extract_view_headers(loaded_lkml))
 def sort_field_parameters(field):
     '''this function correctly orders the dimensions in a looker field according to the CS style guide.
     Be aware that the field name itself is also contained in this dictionary at the end, and will
@@ -371,8 +370,6 @@ def print_field_elements(field_type,dictionary):
 # sort_field_type('dimensions')
 
 
-# print(extract_view_headers(loaded_lkml, field_types_dictionary))
-
 
 
 ##### TESTING/ CODE GRAVEYARD #####
@@ -405,29 +402,3 @@ dictionary = {
     'third_record': {'color': 'red', 'shape': 'triangle', 'count': 3}
 }
 '''
-
-# currently: write functions that loop through the various elements of the fields tuples
-
-
-# def field_types():
-#     fields = []
-#     for i in field_types_info:
-#         fields.append(field_types_info[0])
-#     return fields
-
-# print(field_types())
-
-# def evh_3(loaded_lkml):
-#     ''' - remove the view file header elements from the loaded_lkml dictionary, 
-#         - format them, 
-#         - write the result to 'header_string' variable. 
-#         - By design, this captures ANY keys not in the field_types() function
-#           so if you have any weirdness in the operation it will appear in the header.'''
-#     view_headers = {}
-#     lkml_field_header_names_list = lkml_field_header_names()
-#     for key, value in loaded_lkml.items(): #find keys not in field types dict
-#         if key not in lkml_field_header_names_list:
-#             print(key)
-#     print(lkml_field_header_names_list)
-
-# evh_3(loaded_lkml)
