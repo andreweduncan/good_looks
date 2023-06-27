@@ -59,11 +59,11 @@ field_types_info = (
     # Nested tuple containing looker field type information for the program. 
     # Format:
     #  field_name  |  lkml_field_header_name  |  loaded_lkml_field_key_name
-    ("dimension_group", "dimension_groups", "DIMENSION GROUPS")
-    ("dimension", "dimensions", "DIMENSIONS")
-    ("measure", "measures", "MEASURES")
-    ("N/A", "primary_key", "PRIMARY KEY") #not actual field types
-    ("N/A", "parameters_and_filters", "PARAMETERS / FILTERS") #not actual field types
+    ("dimension_group", "dimension_groups", "DIMENSION GROUPS"),
+    ("dimension", "dimensions", "DIMENSIONS"),
+    ("measure", "measures", "MEASURES"),
+    ("N/A", "primary_key", "PRIMARY KEY"), #not actual field types
+    ("N/A", "parameters_and_filters", "PARAMETERS / FILTERS"), #not actual field types
     ("N/A", "sets", "SETS") #not actual field types
 )
 
@@ -218,8 +218,6 @@ def main(loaded_lkml, field_types_dictionary):
     print(formatted_view)
 
 
-# create a dictionary to store the ordered field results
-fields_dictionary = {}
 
 
 # find_field_types(loaded_lkml, field_types_dictionary)
@@ -290,7 +288,6 @@ def formatted_field_type(field_type):
 # print("clear _______________________________________________\n" * 3)
 
 # formatted_field_type(loaded_lkml['dimensions'])
-print(type(loaded_lkml['dimensions']))
 
 '''
 okay think through how to build the body function
@@ -333,7 +330,7 @@ def sort_field_type(field_type):
 
 
 
-sort_field_type('dimensions')
+
 
 
 def print_field_elements(field_type,dictionary):
@@ -357,10 +354,12 @@ def print_field_elements(field_type,dictionary):
 
 
 
-print(loaded_lkml)
+# print(loaded_lkml)
+
+# sort_field_type('dimensions')
 
 
-
+print(extract_view_headers(loaded_lkml, field_types_dictionary))
 
 
 
