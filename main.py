@@ -82,16 +82,6 @@ def loaded_lkml_field_key_name():
 with open('lookml_string_file.txt', 'r') as file:
     loaded_lkml = lkml.load(file.read())['views'][0]
 
-# keys = field type names to search for in the loaded_lkml, values = how to print the section headers for that field
-field_types_dictionary = {
-    "dimension_groups": "DIMENSION GROUPS",
-    "dimensions": "DIMENSIONS",
-    "measures": "MEASURES",
-    "primary_key": "PRIMARY KEY", #not actual field types
-    "parameters_and_filters": "PARAMETERS / FILTERS", #not actual field types
-    "sets": "SETS" #not actual field types
-}
-
 ############ Section 1 ###############
 # https://candlescience.slab.com/posts/look-ml-standards-vwd6xr1z#:~:text=2-,Ordering,-of%20dimensions%3A
 
@@ -197,7 +187,8 @@ def centered_header(field, header_length = 26):
         front_pad = extra_space // 2
         back_pad = extra_space // 2 + 1
     boundary = '#' * header_length
-    print(boundary+'\n##'+ (' '*front_pad) + field + (' '*back_pad)+'##\n'+boundary)
+    header = (boundary+'\n##'+ (' '*front_pad) + field + (' '*back_pad)+'##\n'+boundary+'\n')
+    return header
 
 
 # print(fields_dictionary)
@@ -231,51 +222,6 @@ main(loaded_lkml)
 #     dictionary and searching for the matching field type in the loaded lkml. If it finds a match,
 #     it calls the print_field_elements function to print the field type, field name, and field contents.
 #     '''
-
-
-
-# right now:
-
-
-
-
-
-
-
-
-
-'''
-right now I want to create a version of print field elements that doesnt validate the field type.
-We can then put that inside of a for loop that does the validation 
-
-
-'''
-
-# def print_field_elements(field_type,dictionary):
-#     '''This function takes a field type and dictionary input for that field,
-#     and prints out the field type, the field name, and the contents of the field WITH field header
-#     and organized contents. Additionally, each field is also in alphebetical order.
-#     '''
-#     for key, value in dictionary[field_type]:
-#         print(f'{key}: {value}')
-#     # matched_variable = field_type
-#     # print(matched_variable)
-#     # for key, value in dictionary.items():
-#     #     print(f'\n  {field_type}: {key} ' + '{')
-#     #     for parameter, contents  in value.items():
-#     #         print(f'    {parameter}: {contents}')
-#     #     print('    }')
-
-# goal:
-# get a list of fields of a given field type
-
-
-# print_field_elements('dimensions',loaded_lkml)
-# print(loaded_lkml['dimensions'])
-
-# for field in loaded_lkml['dimensions']:
-#     sort_field_parameters(field)
-#     field_name, sorted_field_parameters_dict
 
 def formatted_field_type(field_type):
     fields_dictionary = {}
@@ -350,7 +296,23 @@ def sort_field_type(field_type):
     return body_string
 
 
-sort_field_type('dimensions')
+# sort_field_type('dimensions')
+
+
+def sort_field_type2(field_type,lkml_field_header_name):
+    fields_dictionary = {}
+    body_string = centered_header(lkml_field_header_name)
+    for field in loaded_lkml[field_type]:
+        key, value = sort_field_parameters(field) # sort field parameters of a field
+        fields_dictionary[key] = value # add that field to the fields dictionary
+    sorted(fields_dictionary.items()) # alphabetize dictionary fields by name
+    for key, value in fields_dictionary.items(): # add field type and name
+        body_string = body_string + (f'\n  {field_type}: {key} ' + '{')
+        for parameter, contents  in value.items():
+            body_string += (f'\n    {parameter}: {contents}')
+        body_string += ('\n  }\n')
+    print(body_string)
+    return body_string
 
 '''
 Todo: Create a second copy of sorted field type that takes 
