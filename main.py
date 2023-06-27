@@ -203,20 +203,6 @@ def centered_header(field, header_length = 26):
 # print(fields_dictionary)
 # print_field_elements('dimensions',fields_dictionary)
 
-def find_field_types(dictionary, field_types_dictionary):
-    ''' this is a function that searches the dictionary created by loaded_lkml
-    and finds the matching field types that match keys in the field_types_dictionary.
-    '''
-    found_values = []
-    unexpected_values = []
-    for key in dictionary.keys():
-        if key in field_types_dictionary.keys():
-            found_values.append(key)
-        else:
-            unexpected_values.append(key)
-    print(f"Found field types: {found_values}.\n Also found unexpected field types: {unexpected_values}")
-
-
 
 def main(loaded_lkml, field_types_dictionary):
     # extract and format view file headers
