@@ -5,7 +5,7 @@ HOW IT WORKS:
 # main() - performs several operations on the loaded_lkml
 Write out how main works:
     1. Write the header of the view to the final file (TBD)
-    2. for loop: get field type from the loaded_lkml using field_types_dictionary
+    2. for loop: get field type from the loaded_lkml using field_types_info
             a. run sorting operations on each fields' parameters
             b. sort the fields alphabetically
             c. output to the final file
@@ -40,8 +40,32 @@ field lkml (eg. dimension: my_dimension {...)
 So:
 1. create a tuple of tuples that contains field_name, loaded_lkml_field_key_name, lkml_field_header_name
 2. figure out how to access each element of the tuple, and how to loop through pulling x
-'''
+3. Replace all references to field_types_dictionary to the appropriate tuple element field_types_tuple[0]
 
+'''
+# field_types_info = (
+#     # Nested tuple containing looker field type information for the program. 
+#     # Format:
+#     #  field_name  |  lkml_field_header_name  |  loaded_lkml_field_key_name
+#     ("dimension_group", "dimension_groups", "DIMENSION GROUPS")
+#     ("dimension", "dimensions", "DIMENSIONS")
+#     ("measure", "measures", "MEASURES")
+#     ("N/A", "primary_key", "PRIMARY KEY") #not actual field types
+#     ("N/A", "parameters_and_filters", "PARAMETERS / FILTERS") #not actual field types
+#     ("N/A", "sets", "SETS") #not actual field types
+# )
+
+field_types_info = (
+    # Nested tuple containing looker field type information for the program. 
+    # Format:
+    #  field_name  |  lkml_field_header_name  |  loaded_lkml_field_key_name
+    ("dimension_group", "dimension_groups", "DIMENSION GROUPS")
+    ("dimension", "dimensions", "DIMENSIONS")
+    ("measure", "measures", "MEASURES")
+    ("N/A", "primary_key", "PRIMARY KEY") #not actual field types
+    ("N/A", "parameters_and_filters", "PARAMETERS / FILTERS") #not actual field types
+    ("N/A", "sets", "SETS") #not actual field types
+)
 
 # loaded_lkml - get lkml view file contents from lookml_string_file
 with open('lookml_string_file.txt', 'r') as file:
@@ -61,11 +85,11 @@ field_types_dictionary = {
 # https://candlescience.slab.com/posts/look-ml-standards-vwd6xr1z#:~:text=2-,Ordering,-of%20dimensions%3A
 
 # removes and writes view headers to new file 
-def extract_view_headers(loaded_lkml, field_types_dictionary):
+def extract_view_headers(loaded_lkml, lkml_field_header_name):
     ''' - remove the view file header elements from the loaded_lkml dictionary, 
         - format them, 
         - write the result to 'header_string' variable. 
-        - By design, this captures ANY keys not in the field_types_dictionary.
+        - By design, this captures ANY keys not in the field_types_info under lkml_field_header_name data.
           so if you have any weirdness in the operation it will appear in the header.'''
     view_headers = {}
     for key, value in loaded_lkml.items(): #find keys not in field types dict
@@ -306,12 +330,7 @@ def sort_field_type(field_type):
         body_string += ('\n  }\n')
     print(body_string)
     return body_string
-### keeping the working part of this loop from the function until i write a working string append portion
-    # for key, value in fields_dictionary.items():
-    #     print(f'\n  {field_type}: {key} ' + '{')
-    #     for parameter, contents  in value.items():
-    #         print(f'    {parameter}: {contents}')
-    #     print('    }')    
+
 
 
 sort_field_type('dimensions')
