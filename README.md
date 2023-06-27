@@ -42,6 +42,7 @@ Alphabetized, grouped, and sorted.
 This program uses the `lkml` python module to parse the contents of a lookml file 
 into a nested dictionary
 
+The main() function writes the output of the header and body of the view file 
 a function that references a dictionary of potential field types 
 (the key is the field name and the value is a capitalized plural version used to 
 create the field header) is used to 
