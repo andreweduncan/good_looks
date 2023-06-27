@@ -67,6 +67,28 @@ field_types_info = (
     ("N/A", "sets", "SETS") #not actual field types
 )
 
+# these fields unpack the correct tuple element from field_types_info to return a list of
+# field_name  |  lkml_field_header_name  |  loaded_lkml_field_key_name
+# these are packed into tuples because sometimes the values need crossed referenced against 
+# each other, for determining things like printing headers.
+def field_types():
+    field_type_list = []
+    for field in field_types_info:
+        field_type_list.append(field[0])
+    return field_type_list
+
+def lkml_field_header_names():
+    lkml_field_header_name_list = []
+    for field_header_name in field_types_info:
+        lkml_field_header_name_list.append(field_header_name[1])
+    return lkml_field_header_name_list
+
+def loaded_lkml_field_key_name():
+    loaded_lkml_field_key_name_list = []
+    for field_header_name in field_types_info:
+        loaded_lkml_field_key_name_list.append(field_header_name[2])
+    return loaded_lkml_field_key_name_list
+
 # loaded_lkml - get lkml view file contents from lookml_string_file
 with open('lookml_string_file.txt', 'r') as file:
     loaded_lkml = lkml.load(file.read())['views'][0]
@@ -93,7 +115,7 @@ def extract_view_headers(loaded_lkml, lkml_field_header_name):
           so if you have any weirdness in the operation it will appear in the header.'''
     view_headers = {}
     for key, value in loaded_lkml.items(): #find keys not in field types dict
-        if key not in field_types_dictionary:
+        if key not in field_types_info[0]:
             view_headers[key] = value
     view_name = view_headers['name'] #extract and remove name
     del view_headers['name']
@@ -359,7 +381,7 @@ def print_field_elements(field_type,dictionary):
 # sort_field_type('dimensions')
 
 
-print(extract_view_headers(loaded_lkml, field_types_dictionary))
+# print(extract_view_headers(loaded_lkml, field_types_dictionary))
 
 
 
@@ -393,4 +415,16 @@ dictionary = {
     'third_record': {'color': 'red', 'shape': 'triangle', 'count': 3}
 }
 '''
+
+# currently: write functions that loop through the various elements of the fields tuples
+
+
+# def field_types():
+#     fields = []
+#     for i in field_types_info:
+#         fields.append(field_types_info[0])
+#     return fields
+
+# print(field_types())
+
 
