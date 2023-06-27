@@ -204,9 +204,9 @@ def centered_header(field, header_length = 26):
 # print_field_elements('dimensions',fields_dictionary)
 
 
-def main(loaded_lkml, field_types_dictionary):
+def main(loaded_lkml):
     # extract and format view file headers
-    header = extract_view_headers(loaded_lkml, field_types_dictionary)
+    header = extract_view_headers(loaded_lkml)
     body = "" #TBD
     footer = '\n}'
     formatted_view = header + body + footer
@@ -214,25 +214,24 @@ def main(loaded_lkml, field_types_dictionary):
         file.write(formatted_view)
     print(formatted_view)
 
+main(loaded_lkml)
 
 
 
-# find_field_types(loaded_lkml, field_types_dictionary)
 
-# main(loaded_lkml, field_types_dictionary)
+# find_field_types(loaded_lkml)
+
+# main(loaded_lkml)
 
 #experimental
-# def assemble_view_body(loaded_lkml, field_types_dictionary):
+# def assemble_view_body(loaded_lkml):
 #     #output of this function should be a string that represents the view file body
 #     '''this function takes the loaded lkml and the field types dictionary and
 #     assembles the body of the view file. It does this by iterating through the field types
 #     dictionary and searching for the matching field type in the loaded lkml. If it finds a match,
 #     it calls the print_field_elements function to print the field type, field name, and field contents.
 #     '''
-#     for key in loaded_lkml.keys():
-#         if key in field_types_dictionary.keys():
-#             print(loaded_lkml[key])
-# assemble_view_body(loaded_lkml, field_types_dictionary)
+
 
 
 
