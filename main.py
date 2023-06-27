@@ -1,5 +1,19 @@
 import lkml
+
+
 '''
+ToDo Next:
+You are leaving off with a half-working sort_field_type2 function.
+Its doing weird shit with the spacing, but the print commands you have added in seem to work
+correctly.
+(is this something to do with the way the CLI displays spacing?)
+
+Once you have the spacing working correctly, you should be able to use the create_view_body() function
+to loop through all field types of a view file.
+
+After that, just slap create_view_body inside of main, and you will have a working view file organizer.
+
+
 HOW IT WORKS:
 # loaded_lkml - provides the view file info to parse
 # main() - performs several operations on the loaded_lkml
@@ -10,7 +24,7 @@ Write out how main works:
             b. sort the fields alphabetically
             c. output to the final file
 '''
-
+#loaded_lkml['dimensions'] is a list of dictionaries.
 '''
 FUNCTION PURPOSES:
 write what the functions do in a single like to recap what you have so far, and orient everything under a main() function.
@@ -38,7 +52,7 @@ need the real (non-plural) field type name to add in as the field type for the a
 field lkml (eg. dimension: my_dimension {...)
 
 So:
-1. create a tuple of tuples that contains field_name, loaded_lkml_field_key_name, lkml_field_header_name
+1. create a tuple of tuples that contains field_name, loaded_lkml_dict_key_name, lkml_field_header_name
 2. figure out how to access each element of the tuple, and how to loop through pulling x
 3. Replace all references to field_types_dictionary to the appropriate tuple element field_types_tuple[0]
 
@@ -47,7 +61,7 @@ So:
 field_types_info = (
     # Nested tuple containing looker field type information for the program. 
     # Format:
-    #  field_name  |  lkml_field_header_name  |  loaded_lkml_field_key_name
+    #  field_name  |  loaded_lkml_dict_key_name   |  lkml_field_header_name  
     ("dimension_group", "dimension_groups", "DIMENSION GROUPS"),
     ("dimension", "dimensions", "DIMENSIONS"),
     ("measure", "measures", "MEASURES"),
@@ -57,7 +71,7 @@ field_types_info = (
 )
 
 # these fields unpack the correct tuple element from field_types_info to return a list of
-# field_name  |  lkml_field_header_name  |  loaded_lkml_field_key_name
+# field_name  |  lkml_field_header_name  |  loaded_lkml_dict_key_name
 # these are packed into tuples because sometimes the values need crossed referenced against 
 # each other, for determining things like printing headers.
 def field_types():
@@ -66,17 +80,19 @@ def field_types():
         field_type_list.append(field[0])
     return field_type_list
 
+def loaded_lkml_dict_key_name():
+    loaded_lkml_dict_key_name_list = []
+    for field_header_name in field_types_info:
+        loaded_lkml_dict_key_name_list.append(field_header_name[1])
+    return loaded_lkml_dict_key_name_list
+
 def lkml_field_header_names():
     lkml_field_header_name_list = []
     for field_header_name in field_types_info:
-        lkml_field_header_name_list.append(field_header_name[1])
+        lkml_field_header_name_list.append(field_header_name[2])
     return lkml_field_header_name_list
 
-def loaded_lkml_field_key_name():
-    loaded_lkml_field_key_name_list = []
-    for field_header_name in field_types_info:
-        loaded_lkml_field_key_name_list.append(field_header_name[2])
-    return loaded_lkml_field_key_name_list
+
 
 # loaded_lkml - get lkml view file contents from lookml_string_file
 with open('lookml_string_file.txt', 'r') as file:
@@ -231,35 +247,6 @@ def formatted_field_type(field_type):
     print(fields_dictionary)
     return fields_dictionary
 
-# print("clear _______________________________________________\n" * 3)
-
-# formatted_field_type(loaded_lkml['dimensions'])
-
-'''
-okay think through how to build the body function
-1. get a function that can correctly order the parameters of a single field.
-2. run that function for every field of a field type
-3. run the function to alphabetize those fields
-4. run the function to print the field type, field name, and field contents
-
-
-'''
-
-#loaded_lkml['dimensions'] is a list of dictionaries.
-the_list = [
-    {'description': 'Box code of the carton. Box codes that start with sku are items that ship as-is without being put into a carton.', 
-    'type': 'string', 'sql': '${TABLE}.box_code', 'name': 'box_code'}, 
-    {'description': 'Shipping carrier responsible for delivering the packed carton to the customer', 
-    'type': 'string', 'sql': '${TABLE}.carrier', 'name': 'carrier'}, 
-    {'type': 'string', 'description': """If the box code starts with ‘sku’, then it is a ‘self-contained item'.\n                  
-    If the box code uses the word 'envelope', then it is a ‘packed envelope’.\n                  
-    If the box code uses the word 'box', then it is a ‘packed box’.\n                  
-    If it doesnt match any of these things, then it is ‘uncategorized’.""", 
-    'sql': '${TABLE}.package_type', 'name': 'package_type'}, 
-    {'type': 'number', 'description': 'Carton id code. This number is unique to each individual box that we pack and ship out.', 'sql': '${TABLE}.carton_id', 'name': 'carton_id'}, {'description': 'Day of week (Eastern Time) that a carton was packed', 'type': 'string', 'sql': '${TABLE}.day_of_week', 'name': 'day_of_week'}, {'description': 'hour of day (Eastern Time) that a carton was packed', 'type': 'number', 'sql': '${TABLE}.hour_of_day', 'name': 'hour_of_day'}, {'description': 'ID of order that this package belongs to', 'type': 'number', 'sql': '${TABLE}.order_id', 'name': 'order_id'}, {'description': 'Name of warehouse where carton was packed', 'type': 'string', 'sql': '${TABLE}.warehouse', 'name': 'warehouse'}, {'description': 'weight in pounds of the completed packed carton', 'type': 'number', 'sql': '${TABLE}.lb_weight', 'name': 'lb_weight'}]
-
-
-
 
 
 def print_field_elements(field_type,dictionary):
@@ -296,36 +283,47 @@ def sort_field_type(field_type):
     return body_string
 
 
-# sort_field_type('dimensions')
-
-
-def sort_field_type2(field_type,lkml_field_header_name):
+def sort_field_type2(loaded_lkml_dict_key_name,lkml_field_header_name):
     fields_dictionary = {}
     body_string = centered_header(lkml_field_header_name)
-    for field in loaded_lkml[field_type]:
+    for field in loaded_lkml[loaded_lkml_dict_key_name]:
         key, value = sort_field_parameters(field) # sort field parameters of a field
         fields_dictionary[key] = value # add that field to the fields dictionary
     sorted(fields_dictionary.items()) # alphabetize dictionary fields by name
     for key, value in fields_dictionary.items(): # add field type and name
-        body_string = body_string + (f'\n  {field_type}: {key} ' + '{')
+        body_string = body_string + (f'\n  {loaded_lkml_dict_key_name}: {key} ' + '{')
         for parameter, contents  in value.items():
             body_string += (f'\n    {parameter}: {contents}')
         body_string += ('\n  }\n')
     print(body_string)
     return body_string
 
-'''
-Todo: Create a second copy of sorted field type that takes 
-a field type and a lkml_field_header_name and works just like the first version.
 
-We can then input that shit into a loop that appends the header to the rest of the body contents correctly
-'''
 
-# print(loaded_lkml)
+def create_view_body(loaded_lkml):
+    for i in field_types_info:
+        if i in loaded_lkml.keys():
+            lkml_field_header_name = i[2]
+            loaded_lkml_dict_key_name = i[1]
+            sorted_field_type += sort_field_type2(loaded_lkml_dict_key_name,loaded_lkml_dict_key_name)
+            return sorted_field_type
+        body += sorted_field_type
+        return body
+    print(body)
+
+# leaving off
+
+
+
+#     sort_field_type2(loaded_lkml_dict_key_name)
+# sort_field_type2('dimensions','DIMENSIONS')
 
 # sort_field_type('dimensions')
+print(sort_field_type2('measures','MEASURES'))
+print(lkml_field_header_names())
 
-
+print(field_types())
+print(loaded_lkml_dict_key_name())
 
 
 ##### TESTING/ CODE GRAVEYARD #####
@@ -351,10 +349,4 @@ dictionary = {
     'name': 'my_dimension'
 }
 
-# this was a dictionary that fed a gpt prompt for the print_dictionary_elements function
- python_dictionary = {
-    'first_record': {'color': 'orange', 'shape': 'circle', 'count': 2}, 
-    'second_record': {'color': 'blue', 'shape': 'square', 'count': 1}, 
-    'third_record': {'color': 'red', 'shape': 'triangle', 'count': 3}
-}
 '''
