@@ -195,8 +195,17 @@ def create_view_body(loaded_lkml):
 #############################################
 
 
+def read_lookml_file():
+    try:
+        with open("lookml_string_file.view", "r") as file:
+            loaded_lkml = lkml.load(file.read())['views'][0]
+            return loaded_lkml
+    except FileNotFoundError:
+        error_message = "The program expects a view file located inside 'lookml_string_file.txt'. "
+        error_message += "Please add 'lookml_string_file.txt' to this folder and rerun the program."
+        return error_message
 
-
+loaded_lkml = read_lookml_file()
 
 def main(loaded_lkml):
     # extract and format view file headers
@@ -209,8 +218,11 @@ def main(loaded_lkml):
     print(formatted_view)
 
 # loaded_lkml - get lkml view file contents from lookml_string_file
-with open('lookml_string_file.txt', 'r') as file:
-    loaded_lkml = lkml.load(file.read())['views'][0]
+# with open('lookml_string_file.view', 'r') as file:
+#     loaded_lkml = lkml.load(file.read())['views'][0]
+
 
 main(loaded_lkml)
+
+
 

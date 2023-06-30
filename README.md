@@ -99,12 +99,6 @@ they are working on, organized from smallest piece to largest.
 - [ ] add in double semicolons after sql files </br>
 - [ ] add in quotation marks around descriptions </br>
 
-- [ ] Write a function that does some error handling for the lookml_loads </br>
-function that is called at runtime. If the lkml file is not formatted </br>
-correctly to be able to be loaded, notify the user with a message that </br>
-tells them that they did not upload a view file that the lkml module </br>
-could parse. </br></br>
-
 - [ ] add on Regex-based validation for small rules that are commonly missed, </br>
 such as:
    1. double semicolons not on the same line
