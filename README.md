@@ -88,36 +88,24 @@ I'm at a bit of a sticking point on #3.
 -----------------------------------
 ## ToDo
 </br>
-[DONE - 2021-09-22] - function find_matching_values </br>
 
-- [x] Write a ChatGPT prompt to write a function that iterates through </br>
-the keys of a dictionary, checking if the value matches any </br>
-element of a list, and bypassing the ones that are not found. </br>
-After the dictionary has been checked for all values in the list, </br>
-the values from the list that WERE found are printed to the console. </br>
-Edit: it also prints unexpected matches. Next steps here are to clean 
-the loaded lkml variable beforehand to extract the sql table name and some </br>
-other stuff into global variables. </br>
-</br></br>
+-[ ] organize the code into categories based on what part of the lkml file </br>
+they are working on, organized from smallest piece to largest. 
+   -[ ] field parameters</br>
+   - [ ] fields</br>
+   - [ ] field types</br>
+   - [ ] view file header</br></br>
 
-- Write a function that does some error handling for the lookml_loads </br>
+- [ ] add in double semicolons after sql files </br>
+- [ ] add in quotation marks around descriptions </br>
+
+- [ ] Write a function that does some error handling for the lookml_loads </br>
 function that is called at runtime. If the lkml file is not formatted </br>
 correctly to be able to be loaded, notify the user with a message that </br>
 tells them that they did not upload a view file that the lkml module </br>
 could parse. </br></br>
 
-- Write the main() function [already in the "How It Works" section](#how-it-works). </br>
-a function that references a dictionary of potential field types </br> 
-(the key is the field name and the value is a capitalized plural version </br>
-used to create the field header) is used to:
-   1. Write the header for the view file into a new file. </br>
-   2. Iterate through each field type in the dataframe, and keep going </br>
-   to the next type if the current one is empty. </br>
-   3. Perform a series of grouping, sorting, and ordering operations on them. </br>
-   4. Write the results to a dictionary.
-   5. Write that dictionary into new file with headers and footers. </br>
-</br></br>
-- add on Regex-based validation for small rules that are commonly missed, </br>
+- [ ] add on Regex-based validation for small rules that are commonly missed, </br>
 such as:
    1. double semicolons not on the same line
    2. datetime fields that contain the word "time" already in the name </br>

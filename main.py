@@ -3,8 +3,9 @@ import lkml
 
 '''
 ToDo Next:
-Next steps are outlined in your obsidian doc.
-Immediate next work is to get the main function working correctly.
+You have a working version of main(), but it is printing lists of the field types and contents at the start of the file
+The origin of this is somewhere inside the extract_view_headers() function, which is called by main().
+
 
 HOW IT WORKS:
 # loaded_lkml - provides the view file info to parse
@@ -100,18 +101,18 @@ def extract_view_headers(loaded_lkml):
         - write the result to 'header_string' variable. 
         - By design, this captures ANY keys not in the field_types() function
           so if you have any weirdness in the operation it will appear in the header.'''
+    lkml_field_dict_keys = loaded_lkml_dict_key_name()
     view_headers = {}
-    lkml_field_header_names_list = lkml_field_header_names()
     for key, value in loaded_lkml.items(): #find keys not in field types dict
-        if key not in lkml_field_header_names_list:
+        if key not in lkml_field_dict_keys:
             view_headers[key] = value
     view_name = view_headers['name'] #extract and remove name
     del view_headers['name']
-    view_headers['sql_table_name'] = view_headers['sql_table_name'] + ' ;;' #add semicolons
+    view_headers['sql_table_name'] = view_headers['sql_table_name'] + ' ;;' #add semicolons  
     result = ""
     for key, value in view_headers.items(): #create correctly formatted view file header string
         result += f"  {key}: {value}\n"
-        header_string = f'view: {view_name}' + ' {\n' + result
+        header_string = f'view: {view_name}' + ' {\n' + result + '\n'
     return header_string
 
 def sort_field_parameters(field):
@@ -210,26 +211,6 @@ def formatted_field_type(field_type):
 
 
 
-def print_field_elements(field_type,dictionary):
-    '''This function takes a field type and dictionary input for that field,
-    and prints out the field type, the field name, and the contents of the field WITH field header
-    and organized contents. Additionally, each field is also in alphebetical order.
-    '''
-    field_type_list = ['pk','parameters_and_filters','dimension_groups','dimensions','measures','sets']
-    if field_type in field_type_list:
-        matched_variable = field_type
-        print(matched_variable)
-        for key, value in dictionary.items():
-            print(f'\n  {field_type}: {key} ' + '{')
-            for parameter, contents  in value.items():
-                print(f'    {parameter}: {contents}')
-            print('    }')
-    else:
-        print(f'Field Type Invalid:\n you entered: {field_type}. valid field types are {field_type_list}')
-        return
-
-
-
 def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name):
     fields_dictionary = {}
     body_string = centered_header(lkml_field_header_name)
@@ -272,22 +253,41 @@ def main(loaded_lkml):
 
 # print(create_view_body(loaded_lkml))
 
-# print(extract_view_headers(loaded_lkml))
-
-# main(loaded_lkml)
-
-# def main_test(loaded_lkml):
-#     # extract and format view file headers
-#     header = extract_view_headers(loaded_lkml)
-#     # body = create_view_body(loaded_lkml) #TBD
-#     footer = '\n}'
-#     formatted_view = header  + footer
-#     with open('ordered_lkml_file.txt', 'w') as file:
-#         file.write(formatted_view)
-#     print(formatted_view)
+# with open('ordered_lkml_file.txt', 'w') as file:
+#     file.write(extract_view_headers(loaded_lkml))
+main(loaded_lkml)
 
 
-# main_test(loaded_lkml)
+
+def test_extract_view_headers(loaded_lkml):
+    ''' - remove the view file header elements from the loaded_lkml dictionary, 
+        - format them, 
+        - write the result to 'header_string' variable. 
+        - By design, this captures ANY keys not in the field_types() function
+          so if you have any weirdness in the operation it will appear in the header.'''
+    lkml_field_dict_keys = loaded_lkml_dict_key_name()
+    view_headers = {}
+    for key, value in loaded_lkml.items(): #find keys not in field types dict
+        if key not in lkml_field_dict_keys:
+            view_headers[key] = value
+    view_name = view_headers['name'] #extract and remove name
+    del view_headers['name']
+    view_headers['sql_table_name'] = view_headers['sql_table_name'] + ' ;;' #add semicolons  
+    result = ""
+    for key, value in view_headers.items(): #create correctly formatted view file header string
+        result += f"  {key}: {value}\n"
+        header_string = f'view: {view_name}' + ' {\n' + result
+    return header_string
+
+# test_extract_view_headers(loaded_lkml)
+
+# print(test_extract_view_headers(loaded_lkml))
+
+
+
+
+
+
 
 ##### TESTING/ CODE GRAVEYARD #####
 # Stuff that isnt useful in the final model but may be helpful for testing
