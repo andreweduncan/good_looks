@@ -3,16 +3,8 @@ import lkml
 
 '''
 ToDo Next:
-You are leaving off with a half-working sort_field_type2 function.
-Its doing weird shit with the spacing, but the print commands you have added in seem to work
-correctly.
-(is this something to do with the way the CLI displays spacing?)
-
-Once you have the spacing working correctly, you should be able to use the create_view_body() function
-to loop through all field types of a view file.
-
-After that, just slap create_view_body inside of main, and you will have a working view file organizer.
-
+Next steps are outlined in your obsidian doc.
+Immediate next work is to get the main function working correctly.
 
 HOW IT WORKS:
 # loaded_lkml - provides the view file info to parse
@@ -207,37 +199,6 @@ def centered_header(field, header_length = 26):
     return header
 
 
-# print(fields_dictionary)
-# print_field_elements('dimensions',fields_dictionary)
-
-
-def main(loaded_lkml):
-    # extract and format view file headers
-    header = extract_view_headers(loaded_lkml)
-    body = "" #TBD
-    footer = '\n}'
-    formatted_view = header + body + footer
-    with open('ordered_lkml_file.txt', 'w') as file:
-        file.write(formatted_view)
-    print(formatted_view)
-
-# main(loaded_lkml)
-
-
-
-
-# find_field_types(loaded_lkml)
-
-# main(loaded_lkml)
-
-#experimental
-# def assemble_view_body(loaded_lkml):
-#     #output of this function should be a string that represents the view file body
-#     '''this function takes the loaded lkml and the field types dictionary and
-#     assembles the body of the view file. It does this by iterating through the field types
-#     dictionary and searching for the matching field type in the loaded lkml. If it finds a match,
-#     it calls the print_field_elements function to print the field type, field name, and field contents.
-#     '''
 
 def formatted_field_type(field_type):
     fields_dictionary = {}
@@ -267,20 +228,6 @@ def print_field_elements(field_type,dictionary):
         print(f'Field Type Invalid:\n you entered: {field_type}. valid field types are {field_type_list}')
         return
 
-# def sort_field_type(field_type):
-#     fields_dictionary = {}
-#     body_string = '\n' + '#'*44 + '\n####### CENTERED HEADER DUMMY STRING #######\n' + '#'*44 + '\n'
-#     for field in loaded_lkml[field_type]:
-#         key, value = sort_field_parameters(field) # sort field parameters of a field
-#         fields_dictionary[key] = value # add that field to the fields dictionary
-#     sorted(fields_dictionary.items()) # alphabetize dictionary fields by name
-#     for key, value in fields_dictionary.items(): # add field type and name
-#         body_string = body_string + (f'\n  {field_type}: {key} ' + '{')
-#         for parameter, contents  in value.items():
-#             body_string += (f'\n    {parameter}: {contents}')
-#         body_string += ('\n  }\n')
-#     print(body_string)
-#     return body_string
 
 
 def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name):
@@ -310,27 +257,6 @@ def create_view_body(loaded_lkml):
     return body
 
 
-def fucking_test_loop(loaded_lkml):
-    body = ''
-    for i in field_types_info:
-        if i[1] in loaded_lkml.keys():
-            lkml_field_header_name = i[2]
-            loaded_lkml_dict_key_name = i[1]
-            sorted_field_type = sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name)
-            body += i[2] + '\n'
-    return body
-
-# print(fucking_test_loop(loaded_lkml))
-
-def test_writing_function():
-    with open('ordered_lkml_file.txt', 'w') as file:
-        # file.write(sort_field_type2('dimensions','DIMENSIONS')) # test with single field type
-        file.write(create_view_body(loaded_lkml)) # test with all field types
-
-# test_writing_function()
-
-
-
 
 def main(loaded_lkml):
     # extract and format view file headers
@@ -344,18 +270,24 @@ def main(loaded_lkml):
 
 # main(loaded_lkml)
 
-print(create_view_body(loaded_lkml))
+# print(create_view_body(loaded_lkml))
 
-# for i in field_types_info:
-#     print(i[1])
+# print(extract_view_headers(loaded_lkml))
 
-# print(loaded_lkml.keys())
+# main(loaded_lkml)
 
-# for i in field_types_info:
-#     if i[1] in loaded_lkml.keys():
-#         print(i[1])
+# def main_test(loaded_lkml):
+#     # extract and format view file headers
+#     header = extract_view_headers(loaded_lkml)
+#     # body = create_view_body(loaded_lkml) #TBD
+#     footer = '\n}'
+#     formatted_view = header  + footer
+#     with open('ordered_lkml_file.txt', 'w') as file:
+#         file.write(formatted_view)
+#     print(formatted_view)
 
 
+# main_test(loaded_lkml)
 
 ##### TESTING/ CODE GRAVEYARD #####
 # Stuff that isnt useful in the final model but may be helpful for testing
