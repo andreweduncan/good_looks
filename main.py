@@ -221,7 +221,7 @@ def main(loaded_lkml):
         file.write(formatted_view)
     print(formatted_view)
 
-main(loaded_lkml)
+# main(loaded_lkml)
 
 
 
@@ -267,23 +267,23 @@ def print_field_elements(field_type,dictionary):
         print(f'Field Type Invalid:\n you entered: {field_type}. valid field types are {field_type_list}')
         return
 
-def sort_field_type(field_type):
-    fields_dictionary = {}
-    body_string = '\n' + '#'*44 + '\n####### CENTERED HEADER DUMMY STRING #######\n' + '#'*44 + '\n'
-    for field in loaded_lkml[field_type]:
-        key, value = sort_field_parameters(field) # sort field parameters of a field
-        fields_dictionary[key] = value # add that field to the fields dictionary
-    sorted(fields_dictionary.items()) # alphabetize dictionary fields by name
-    for key, value in fields_dictionary.items(): # add field type and name
-        body_string = body_string + (f'\n  {field_type}: {key} ' + '{')
-        for parameter, contents  in value.items():
-            body_string += (f'\n    {parameter}: {contents}')
-        body_string += ('\n  }\n')
-    print(body_string)
-    return body_string
+# def sort_field_type(field_type):
+#     fields_dictionary = {}
+#     body_string = '\n' + '#'*44 + '\n####### CENTERED HEADER DUMMY STRING #######\n' + '#'*44 + '\n'
+#     for field in loaded_lkml[field_type]:
+#         key, value = sort_field_parameters(field) # sort field parameters of a field
+#         fields_dictionary[key] = value # add that field to the fields dictionary
+#     sorted(fields_dictionary.items()) # alphabetize dictionary fields by name
+#     for key, value in fields_dictionary.items(): # add field type and name
+#         body_string = body_string + (f'\n  {field_type}: {key} ' + '{')
+#         for parameter, contents  in value.items():
+#             body_string += (f'\n    {parameter}: {contents}')
+#         body_string += ('\n  }\n')
+#     print(body_string)
+#     return body_string
 
 
-def sort_field_type2(loaded_lkml_dict_key_name,lkml_field_header_name):
+def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name):
     fields_dictionary = {}
     body_string = centered_header(lkml_field_header_name)
     for field in loaded_lkml[loaded_lkml_dict_key_name]:
@@ -295,35 +295,66 @@ def sort_field_type2(loaded_lkml_dict_key_name,lkml_field_header_name):
         for parameter, contents  in value.items():
             body_string += (f'\n    {parameter}: {contents}')
         body_string += ('\n  }\n')
-    print(body_string)
     return body_string
 
 
 
 def create_view_body(loaded_lkml):
+    body = ''
     for i in field_types_info:
-        if i in loaded_lkml.keys():
+        if i[1] in loaded_lkml.keys():
             lkml_field_header_name = i[2]
             loaded_lkml_dict_key_name = i[1]
-            sorted_field_type += sort_field_type2(loaded_lkml_dict_key_name,loaded_lkml_dict_key_name)
-            return sorted_field_type
-        body += sorted_field_type
-        return body
-    print(body)
-
-# leaving off
+            sorted_field_type = sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name)
+            body += sorted_field_type + '\n'
+    return body
 
 
+def fucking_test_loop(loaded_lkml):
+    body = ''
+    for i in field_types_info:
+        if i[1] in loaded_lkml.keys():
+            lkml_field_header_name = i[2]
+            loaded_lkml_dict_key_name = i[1]
+            sorted_field_type = sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name)
+            body += i[2] + '\n'
+    return body
 
-#     sort_field_type2(loaded_lkml_dict_key_name)
-# sort_field_type2('dimensions','DIMENSIONS')
+# print(fucking_test_loop(loaded_lkml))
 
-# sort_field_type('dimensions')
-print(sort_field_type2('measures','MEASURES'))
-print(lkml_field_header_names())
+def test_writing_function():
+    with open('ordered_lkml_file.txt', 'w') as file:
+        # file.write(sort_field_type2('dimensions','DIMENSIONS')) # test with single field type
+        file.write(create_view_body(loaded_lkml)) # test with all field types
 
-print(field_types())
-print(loaded_lkml_dict_key_name())
+# test_writing_function()
+
+
+
+
+def main(loaded_lkml):
+    # extract and format view file headers
+    header = extract_view_headers(loaded_lkml)
+    body = create_view_body(loaded_lkml) #TBD
+    footer = '\n}'
+    formatted_view = header + body + footer
+    with open('ordered_lkml_file.txt', 'w') as file:
+        file.write(formatted_view)
+    print(formatted_view)
+
+# main(loaded_lkml)
+
+print(create_view_body(loaded_lkml))
+
+# for i in field_types_info:
+#     print(i[1])
+
+# print(loaded_lkml.keys())
+
+# for i in field_types_info:
+#     if i[1] in loaded_lkml.keys():
+#         print(i[1])
+
 
 
 ##### TESTING/ CODE GRAVEYARD #####
