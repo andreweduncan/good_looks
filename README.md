@@ -73,35 +73,15 @@ High-Level Overview:
 3. Different field types are extracted and organized by type
 4. The file is re-assembled with the new formatting
 
-I'm at a bit of a sticking point on #3.
-
-
-
-3. The individual fields are extracted from the dictionary.
-   - The fields are sorted by `sort_looker_field_dimensions`.
-   - The name of the field is extracted via accessing the 'title' value.
-   - The field type is extracted via retrieving the dictionary name.
-4. The sorted fields are grouped by type and alphabetized by title.
-5. The sorted fields are written to a dictionary.
-6. That completed dictionary is written to a new file.
 </br></br></br>
 -----------------------------------
 ## ToDo
 </br>
 
--[ ] organize the code into categories based on what part of the lkml file </br>
-they are working on, organized from smallest piece to largest. 
-   -[ ] field parameters</br>
-   - [ ] fields</br>
-   - [ ] field types</br>
-   - [ ] view file header</br></br>
-
-- [ ] add in double semicolons after sql files </br>
-- [ ] add in quotation marks around descriptions </br>
 
 - [ ] add on Regex-based validation for small rules that are commonly missed, </br>
 such as:
-   1. double semicolons not on the same line
+   1. ~~double semicolons not on the same line~~ (Not needed - we add semicolons in via a function)
    2. datetime fields that contain the word "time" already in the name </br>
 </br></br>
 Thats it folks, thats the plan for now.

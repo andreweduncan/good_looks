@@ -17,6 +17,19 @@ CODE SECTIONS:
 
 MAIN()
 
+
+Goal for today:
+Write a function that performs some custom formatting on 
+certain view parameters, and get it to run in side the normal program operation
+(most likely when field parameters are being ordered/parsed)
+
+First two rules of function:
+- [ ] add in double semicolons after sql fields </br>
+- [ ] add in quotation marks around descriptions </br>
+
+we are gonna write this one inside the sort_field_parameters function.
+
+
 '''
 
 
@@ -115,9 +128,24 @@ def extract_view_headers(loaded_lkml):
 ##            HEADER FUNCTIONS             ##
 #############################################
 
+
 #############################################
 ##      3. FIELD PARAMETER FUNCTIONS       ##
 #############################################
+
+def field_parameter_adjustments(dictionary):
+    ''' When using the lkml module to parse the view file, the lkml field paramaters 
+    have several unexpected quirks.
+        - SQL fields are missing semicolons (;;) at the end
+        - Descriptions are missing quotation marks.
+    This performs these small adjustments to present the parameters as expected.
+    As more of these adjustments are discovered, they can be added here'''
+    for key, value in dictionary.items():
+        if key == "description":
+            dictionary[key] = '"' + value + '"'
+        elif key == "sql":
+            dictionary[key] = value + " ;;"
+    return dictionary
 
 def sort_field_parameters(field):
     '''this function correctly orders the dimensions in a looker field according to the CS style guide.
@@ -127,18 +155,17 @@ def sort_field_parameters(field):
     del field['name']
     sorted_keys = sorted(field.keys(), key=lambda k: lkml_field_parameters_order.index(k) if k in lkml_field_parameters_order else len(lkml_field_parameters_order))
     sorted_field_parameters_dict = {key: field[key] for key in sorted_keys}
-    return field_name, sorted_field_parameters_dict
+    adjusted_field_parameters = field_parameter_adjustments(sorted_field_parameters_dict)
+    return field_name, adjusted_field_parameters
 
 #############################################
 ##        FIELD PARAMETER FUNCTIONS        ##
 #############################################
 
 
-
 #############################################
 ##     4. FIELD ORGANIZATION FUNCTIONS     ##
 #############################################
-
 
 def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name):
     fields_dictionary = {}
@@ -223,6 +250,5 @@ def main(loaded_lkml):
 
 
 main(loaded_lkml)
-
-
+# print(loaded_lkml['dimensions'][0])
 
