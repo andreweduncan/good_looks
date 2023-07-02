@@ -141,9 +141,9 @@ def field_parameter_adjustments(dictionary):
     This performs these small adjustments to present the parameters as expected.
     As more of these adjustments are discovered, they can be added here'''
     for key, value in dictionary.items():
-        if key == "description":
+        if key == "description": # add double quotes around descriptions
             dictionary[key] = '"' + value + '"'
-        elif key == "sql":
+        elif key in ['sql','sql_latitude','sql_longitude','sql_on','sql_distinct_key']: # add double semicolons to sql fields
             dictionary[key] = value + " ;;"
     return dictionary
 
@@ -155,7 +155,7 @@ def sort_field_parameters(field):
     del field['name']
     sorted_keys = sorted(field.keys(), key=lambda k: lkml_field_parameters_order.index(k) if k in lkml_field_parameters_order else len(lkml_field_parameters_order))
     sorted_field_parameters_dict = {key: field[key] for key in sorted_keys}
-    adjusted_field_parameters = field_parameter_adjustments(sorted_field_parameters_dict)
+    adjusted_field_parameters = field_parameter_adjustments(sorted_field_parameters_dict) #add small adjustments to fields
     return field_name, adjusted_field_parameters
 
 #############################################
@@ -238,7 +238,7 @@ def main(loaded_lkml):
     # extract and format view file headers
     header = extract_view_headers(loaded_lkml)
     body = create_view_body(loaded_lkml) #TBD
-    footer = '\n}'
+    footer = '}'
     formatted_view = header + body + footer
     with open('ordered_lkml_file.txt', 'w') as file:
         file.write(formatted_view)
