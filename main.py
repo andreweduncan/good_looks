@@ -203,7 +203,7 @@ def centered_header(field, header_length = 26):
         front_pad = extra_space // 2
         back_pad = extra_space // 2 + 1
     boundary = '#' * header_length
-    header = (boundary+'\n##'+ (' '*front_pad) + field + (' '*back_pad)+'##\n'+boundary+'\n')
+    header = ('  '+boundary+'\n  ##'+ (' '*front_pad) + field + (' '*back_pad)+'##\n  '+boundary+'\n')
     return header
 
 
@@ -232,7 +232,7 @@ def read_lookml_file():
         error_message += "Please add 'lookml_string_file.txt' to this folder and rerun the program."
         return error_message
 
-loaded_lkml = read_lookml_file()
+
 
 def main(loaded_lkml):
     # extract and format view file headers
@@ -247,8 +247,10 @@ def main(loaded_lkml):
 # loaded_lkml - get lkml view file contents from lookml_string_file
 # with open('lookml_string_file.view', 'r') as file:
 #     loaded_lkml = lkml.load(file.read())['views'][0]
-
-
-main(loaded_lkml)
 # print(loaded_lkml['dimensions'][0])
+
+loaded_lkml = read_lookml_file()
+main(loaded_lkml)
+
+print(centered_header('test indentation'))
 
