@@ -224,7 +224,7 @@ def create_view_body(loaded_lkml):
 
 def read_lookml_file():
     try:
-        with open("lookml_string_file.view", "r") as file:
+        with open(f'original_view_files/{view_file_name}.view', "r") as file:
             loaded_lkml = lkml.load(file.read())['views'][0]
             return loaded_lkml
     except FileNotFoundError:
@@ -240,7 +240,7 @@ def main(loaded_lkml):
     body = create_view_body(loaded_lkml) #TBD
     footer = '}'
     formatted_view = header + body + footer
-    with open('ordered_lkml_file.txt', 'w') as file:
+    with open(f'reformatted_view_files/{view_file_name}.view', 'w') as file:
         file.write(formatted_view)
     print(formatted_view)
 
@@ -248,6 +248,8 @@ def main(loaded_lkml):
 # with open('lookml_string_file.view', 'r') as file:
 #     loaded_lkml = lkml.load(file.read())['views'][0]
 # print(loaded_lkml['dimensions'][0])
+
+view_file_name = input('please enter the name of the view file in the original_view_files folder:')
 
 loaded_lkml = read_lookml_file()
 main(loaded_lkml)
