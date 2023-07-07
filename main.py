@@ -254,5 +254,3 @@ view_file_name = input('please enter the name of the view file in the original_v
 loaded_lkml = read_lookml_file()
 main(loaded_lkml)
 
-print(centered_header('test indentation'))
-
