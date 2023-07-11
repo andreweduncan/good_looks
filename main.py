@@ -40,19 +40,21 @@ we are gonna write this one inside the sort_field_parameters function.
 ##          1. FORMATTING OPTIONS          ##
 #############################################
 
-# this contains a list of field types used to create the body of the view file,
-# the field type headers, and to reconstruct the lkml for the individual fields
+'''
+this contains a list of field types used to create the body of the view file,
+the field type headers, and to reconstruct the lkml for the individual fields.
+field_types_info is a nested tuple containing looker field type information for the program. 
+Each tuple uses the following format:
+field_name  |  loaded_lkml_dict_key_name   |  lkml_field_header_name  
+'''
 field_types_info = (
-    # Nested tuple containing looker field type information for the program. 
-    # Format:
-    #  field_name  |  loaded_lkml_dict_key_name   |  lkml_field_header_name  
     ("dimension_group", "dimension_groups", "DIMENSION GROUPS"),
     ("dimension", "dimensions", "DIMENSIONS"),
     ("measure", "measures", "MEASURES"),
     ("N/A", "primary_key", "PRIMARY KEY"), #not actual field types
     ("N/A", "parameters_and_filters", "PARAMETERS / FILTERS"), #not actual field types
     ("N/A", "sets", "SETS") #not actual field types
-)
+    )
 
 # Controls the ordering of field parameters. Field parameters in the final view will 
 # be sorted in this order. Parameters not listed will be added at the end.
@@ -173,8 +175,8 @@ def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name):
     for field in loaded_lkml[loaded_lkml_dict_key_name]:
         key, value = sort_field_parameters(field) # sort field parameters of a field
         fields_dictionary[key] = value # add that field to the fields dictionary
-    sorted(fields_dictionary.items()) # alphabetize dictionary fields by name
-    for key, value in fields_dictionary.items(): # add field type and name
+    alphabetized_fields = {key:fields_dictionary[key] for key in sorted(fields_dictionary.keys())} # alphabetize fields
+    for key, value in alphabetized_fields.items(): # add field type and name
         body_string = body_string + (f'\n  {loaded_lkml_dict_key_name}: {key} ' + '{')
         for parameter, contents  in value.items():
             body_string += (f'\n    {parameter}: {contents}')
@@ -236,8 +238,8 @@ def read_lookml_file():
 
 def main(loaded_lkml):
     # extract and format view file headers
+    body = create_view_body(loaded_lkml)
     header = extract_view_headers(loaded_lkml)
-    body = create_view_body(loaded_lkml) #TBD
     footer = '}'
     formatted_view = header + body + footer
     with open(f'reformatted_view_files/{view_file_name}.view', 'w') as file:
