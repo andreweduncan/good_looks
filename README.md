@@ -1,17 +1,15 @@
-# good_looks
-custom sorting, ordering, and validation for looker view files
+<p style="color: white; background-color: #368CC3; font-size:200%; text-align:center">good_looks: lookml view file sorting</p>
+custom ordering, sorting, and validation for looker view files
 
 ## Introduction
 This is a project that uses the lkml library to parse the contents </br>
 of a lookml file, and uses custom code to order the contents of the </br>
 file according to the CS lkml style guide. </br></br>
-This readme has a few sections, so I've broken it up by category below - </br>
-skip to what you want and ignore the rest.</br>
-Not all of it will be useful or relevant. 
-</br></br>
+
+
 
 **Sections:**
-  - [How To Use](#how-to-use)
+  - [30 Second User Guide](#30-second-user-guide)
   - [How It Works](#how-it-works) 
   - [ToDo](#todo)
   - [License](#license) 
@@ -19,13 +17,14 @@ Not all of it will be useful or relevant.
 -----------------------------------
 </br>
 
-## How To Use
+## 30 Second User Guide
 
-*Use the entire program in 3 steps.* </br>
+*Use the entire program in 4 steps.* </br>
 
-   1. Copy the contents of your lkml file into lkml_string_file.txt
+   1. Copy a view file (or files) into the `original_view_files` folder
    2. Run the Program
-   3. Copy the output from the console.</br>
+   3. Enter the name of the file to format
+   4. Retrieve your formatted file from the `reformatted_view_files` folder</br>
 
 </br>
 Thats all there is to it. </br>
@@ -39,39 +38,87 @@ Alphabetized, grouped, and sorted.
 
 ## How It Works
 
-This program uses the `lkml` python module to parse the contents of a lookml file 
-into a nested dictionary
+High Level Overview:
 
-The main() function writes the output of the header and body of the view file 
-a function that references a dictionary of potential field types 
-(the key is the field name and the value is a capitalized plural version used to 
-create the field header) is used to 
-   1. iterate through each field type in the dataframe (and keep going to the next type
-   if the current one is empty)
-   2. perform a series of grouping, sorting, and ordering operations on them
-   3. write the results to a new file
-
-Once that file is complete, the contents of that file are printed to the console.
+1. The `lkml` module loads the view contents into a nested dictionary
+2. Different field types are extracted and organized by type
+3. The view file header is extracted
+4. The file is re-assembled with the new formatting </br></br>
 
 
+These steps are covered in detail below in the following sections. </br></br>
+
+   - [lkml parser operations](#lkml-parser-operations)
+   - [field manipulation](#field-manipulation)
+   - [headers and footers](#headers-and-footers)
 
 
 
-The variable `loaded_lkml` contains the raw nested dictionary of 
-the lookml file.
 
 
-Fields are loaded into the dictionary grouped by field type, and can be accessed
-using the name of that type like so: `loaded_lkml['views'][0]['dimensions']`
+### `lkml` Parser Operations
 
-Note that the dictionary appears to be able to load multiple views, but I have not
-tested this.
+The [`lkml`](https://pypi.org/project/lkml/) module is a lkml parser and loader, used to convert the view file contents </br>
+into a python dictionary so that we can categorize and sort the contents. </br>
+You can see the output of this by printing the `loaded_lkml` variable to the console. </br></br>
 
-High-Level Overview:
-1. lkml view file is loaded 
-2. the top level view file info is extracted
-3. Different field types are extracted and organized by type
-4. The file is re-assembled with the new formatting
+The parser operations have only two areas of interest for this program: </br>
+
+   - how the dictionary it outputs is structured
+   - quirks of the `lkml` system
+
+#### `lkml` dictionary structure:</br>
+The dictionary is a heavily nested structure. Uploading a single view file will start the outer </br>
+level of the dictionary, and the contents of the view can be accessed via `loaded_lkml['views'][0]`. </br>
+Note that the dictionary appears to be able to load multiple views at once from a single file, although </br>
+this program does not currently support that functionality. </br>
+
+The next layer inside the dictionary groups the fields by type, with a key corresponding to the </br> 
+plural form of the type. `dimension` fields are accessed via `loaded_lkml['views'][0]['dimensions']`, </br>
+`measure` fields are accessed via `loaded_lkml['views'][0]['measures']`, and so forth. </br>
+
+Curiously, there are non field-type keys in this layer as well, such as `sql_table_name` and `derived_table`. </br>
+These seems to indicate header information for the view file itself.Thus, this program adapts </br> 
+the philosophy of "if its not a field, its part of the view header." </br>
+
+The program defines what is or isnt a header using the `field_types_info` variable. </br>
+This variable does several things for us throughout the program, and using a tuple it stores:
+1. the name of the field type
+2. the field type key we should look for in the loaded_lkml dictionary to find that field
+3. the header name for the field type, which is a little commented-out header we use in our shop </br> 
+to clearly group fields by type for convenience and ease of reading.
+
+The field type keys are listed together with the field type and field type header names in `field_types_info`.
+
+#### loaded_lkml quirks
+As field information is loaded into the dictionary, the lkml module does a few unexpected things that </br>
+shuld be kept in mind. They are recorded here to demonstrate the limitations of this program and our understanding, </br>
+so if you find an unexpected issue not included then open an issue on github. </br></br>
+
+If a fix is included by default, it will be detailed here below 
+
+1. trailing semicolons (`;;`) are removed from sql-related parameters
+ fixed via `field_parameter_adjustments` function.
+
+2. quotation marks are removed from descriptions.
+ fixed via `field_parameter_adjustments` function.
+
+### Field Manipulation
+TBD
+</br></br>
+### Headers and Footers
+
+Header info is identified by top-level view file info in the lkml dictionary </br>
+(described in the previous step). Header elements are defined as "any key value </br>
+that does not match a field type key value in `field_types_info`". </br></br>
+
+As an example of this, `loaded_lkml['views'][0]['dimensions']` would not be considered  </br>
+part of the header, but `loaded_lkml['views'][0]['sql_table_name']` *would* be considered part of it,  </br>
+since `sql_table_name` is not a field type outlined in `field_types_info`. </br>
+
+</br></br>
+
+
 
 </br></br></br>
 -----------------------------------
