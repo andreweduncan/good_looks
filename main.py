@@ -170,6 +170,16 @@ def sort_field_parameters(field):
 #############################################
 
 def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name):
+    '''This function accesses the entire dictionary of a given field type,
+    and performs several sorting and grouping operations.
+
+    Iterate through the list of field types:
+        a. for each field of that type, sort the parameters
+        b. add that field and its sorted parameters to a dictionary where
+        key = field and value = parameters
+        c. once all fields have their parameters sorted,
+        alphabetize the dictionary of fields by name 
+    '''
     fields_dictionary = {}
     body_string = centered_header(lkml_field_header_name)
     for field in loaded_lkml[loaded_lkml_dict_key_name]:
