@@ -40,10 +40,10 @@ Alphabetized, grouped, and sorted.
 
 High Level Overview:
 
-1. The `lkml` module loads the view contents into a nested dictionary
-2. Different field types are extracted and organized by type
-3. The view file header is extracted
-4. The file is re-assembled with the new formatting </br></br>
+1. Load the view contents into a nested dictionary using the `lkml` module
+2. Extract and organize fields by field type
+3. Extract and organize header information (aka non-field information)
+4. Reassemble the complete reformatted view file </br></br>
 
 
 These steps are covered in detail below in the following sections. </br></br>
