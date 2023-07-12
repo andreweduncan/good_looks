@@ -169,7 +169,7 @@ def sort_field_parameters(field):
 ##     4. FIELD ORGANIZATION FUNCTIONS     ##
 #############################################
 
-def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name):
+def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name,lkml_field_name):
     '''This function accesses the entire dictionary of a given field type,
     and performs several sorting and grouping operations.
 
@@ -187,7 +187,7 @@ def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name):
         fields_dictionary[key] = value # add that field to the fields dictionary
     alphabetized_fields = {key:fields_dictionary[key] for key in sorted(fields_dictionary.keys())} # alphabetize fields
     for key, value in alphabetized_fields.items(): # add field type and name
-        body_string = body_string + (f'\n  {loaded_lkml_dict_key_name}: {key} ' + '{')
+        body_string = body_string + (f'\n  {lkml_field_name}: {key} ' + '{')
         for parameter, contents  in value.items():
             body_string += (f'\n    {parameter}: {contents}')
         body_string += ('\n  }\n')
@@ -220,12 +220,19 @@ def centered_header(field, header_length = 26):
 
 
 def create_view_body(loaded_lkml):
+    ''' create_view_body handles the organization of all fields in the view file.
+    If a loaded_lkml dictionary key is found that matches a field type name
+    from field_types_info, it calls sort_field_type to sort the fields of that type,
+    and then adds that sorted field type to the body string. This continues until all field
+    types in the dictionary have been found and sorted.
+    '''
     body = ''
     for i in field_types_info:
         if i[1] in loaded_lkml.keys():
             lkml_field_header_name = i[2]
             loaded_lkml_dict_key_name = i[1]
-            sorted_field_type = sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name)
+            lkml_field_name = i[0]
+            sorted_field_type = sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name,lkml_field_name)
             body += sorted_field_type + '\n'
     return body
 
@@ -256,13 +263,19 @@ def main(loaded_lkml):
         file.write(formatted_view)
     print(formatted_view)
 
-# loaded_lkml - get lkml view file contents from lookml_string_file
-# with open('lookml_string_file.view', 'r') as file:
-#     loaded_lkml = lkml.load(file.read())['views'][0]
-# print(loaded_lkml['dimensions'][0])
 
+# #comment out for testing
 view_file_name = input('please enter the name of the view file in the original_view_files folder:')
-
 loaded_lkml = read_lookml_file()
 main(loaded_lkml)
 
+#uncomment out for testing
+# view_file_name = 'lookml_string_file'
+# loaded_lkml = read_lookml_file()
+'''
+Goal: field types need to be singular in output, not plural.
+
+find where the field type is set, and reference the other part of the tuple used to set it
+sort_field_type
+
+'''
