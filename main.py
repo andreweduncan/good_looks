@@ -273,9 +273,5 @@ main(loaded_lkml)
 # view_file_name = 'lookml_string_file'
 # loaded_lkml = read_lookml_file()
 '''
-Goal: field types need to be singular in output, not plural.
-
-find where the field type is set, and reference the other part of the tuple used to set it
-sort_field_type
 
 '''
