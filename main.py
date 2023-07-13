@@ -145,10 +145,10 @@ def field_parameter_adjustments(dictionary):
     As more of these adjustments are discovered, they can be added here'''
     # add double quotes around descriptions
     for key, value in dictionary.items():
-    # add double quotes around descriptions
-        if key == "description": 
+    # some field parameters require double quotes
+        if key in ["description","label"]: 
             dictionary[key] = '"' + value + '"'
-    # add double semicolons to sql fields
+    # sql-related fields should be ended by double semicolons
         elif key in ['sql','sql_latitude','sql_longitude','sql_on','sql_distinct_key']: 
             dictionary[key] = value + " ;;"
     # convert any lists to strings so that list elements arent printed with quotations
@@ -271,7 +271,7 @@ def main(loaded_lkml):
     print(formatted_view)
 
 
-#comment out for testing
+# comment out for testing
 view_file_name = input('please enter the name of the view file in the original_view_files folder:')
 loaded_lkml = read_lookml_file()
 main(loaded_lkml)
@@ -292,6 +292,9 @@ test__sort_field_parameters = {'type': 'time',
                               'timeframes': ['raw', 'time', 'date', 'week', 'month', 'quarter', 'year'], 
                               'datatype': 'datetime', 
                               'sql': '${TABLE}.created_at_est', 
+                              'label': 'My Label',
                               'name': 'created_at_est'}
+# print(sort_field_parameters(test__sort_field_parameters))
+
 
 
