@@ -136,17 +136,24 @@ def extract_view_headers(loaded_lkml):
 #############################################
 
 def field_parameter_adjustments(dictionary):
-    ''' When using the lkml module to parse the view file, the lkml field paramaters 
+    ''' Used by sort_field_headers() to perform custom adjustments to the lkml field parameters.
+    When using the lkml module to parse the view file, the lkml field paramaters 
     have several unexpected quirks.
         - SQL fields are missing semicolons (;;) at the end
         - Descriptions are missing quotation marks.
     This performs these small adjustments to present the parameters as expected.
     As more of these adjustments are discovered, they can be added here'''
+    # add double quotes around descriptions
     for key, value in dictionary.items():
-        if key == "description": # add double quotes around descriptions
+    # add double quotes around descriptions
+        if key == "description": 
             dictionary[key] = '"' + value + '"'
-        elif key in ['sql','sql_latitude','sql_longitude','sql_on','sql_distinct_key']: # add double semicolons to sql fields
+    # add double semicolons to sql fields
+        elif key in ['sql','sql_latitude','sql_longitude','sql_on','sql_distinct_key']: 
             dictionary[key] = value + " ;;"
+    # convert any lists to strings so that list elements arent printed with quotations
+        elif type(value) == list:
+            dictionary[key] = f"[{', '.join(value)}]"
     return dictionary
 
 def sort_field_parameters(field):
@@ -264,14 +271,27 @@ def main(loaded_lkml):
     print(formatted_view)
 
 
-# #comment out for testing
+#comment out for testing
 view_file_name = input('please enter the name of the view file in the original_view_files folder:')
 loaded_lkml = read_lookml_file()
 main(loaded_lkml)
 
 #uncomment out for testing
-# view_file_name = 'lookml_string_file'
+# view_file_name = 'sample_view_file'
 # loaded_lkml = read_lookml_file()
-'''
+# main(loaded_lkml)
 
-'''
+
+
+# function test values
+#field_parameter_adjustments
+test__field_parameter_adjustments = {'type': 'time', 'timeframes': ['raw', 'time', 'date', 'week', 'month', 'quarter', 'year'], 'sql': '${TABLE}.created_at_est', 'datatype': 'datetime'}
+
+#sort_field_parameters
+test__sort_field_parameters = {'type': 'time', 
+                              'timeframes': ['raw', 'time', 'date', 'week', 'month', 'quarter', 'year'], 
+                              'datatype': 'datetime', 
+                              'sql': '${TABLE}.created_at_est', 
+                              'name': 'created_at_est'}
+
+
