@@ -1,6 +1,5 @@
 import lkml
 
-
 '''
 CODE SECTIONS:
 1. FORMATTING OPTIONS
@@ -17,24 +16,13 @@ CODE SECTIONS:
 
 MAIN()
 
+Function testing variables are available at the end of the file. 
+I dont know how to implement unit and integration testing yet, so if you know
+how and want to help, please do!
 
-Goal for today:
-Write a function that performs some custom formatting on 
-certain view parameters, and get it to run in side the normal program operation
-(most likely when field parameters are being ordered/parsed)
-
-First two rules of function:
-- [ ] add in double semicolons after sql fields </br>
-- [ ] add in quotation marks around descriptions </br>
-
-we are gonna write this one inside the sort_field_parameters function.
-
-
+I also take recommendations for learning resources. I'm currently working through
+teclado's Python course.  
 '''
-
-
-
-
 
 #############################################
 ##          1. FORMATTING OPTIONS          ##
@@ -282,10 +270,13 @@ main(loaded_lkml)
 # main(loaded_lkml)
 
 
+################################
+##  FUNCTION TEST VARIABLES   ##
+################################
 
-# function test values
 #field_parameter_adjustments
 test__field_parameter_adjustments = {'type': 'time', 'timeframes': ['raw', 'time', 'date', 'week', 'month', 'quarter', 'year'], 'sql': '${TABLE}.created_at_est', 'datatype': 'datetime'}
+# try it: print(field_parameter_adjustments(test__field_parameter_adjustments))
 
 #sort_field_parameters
 test__sort_field_parameters = {'type': 'time', 
@@ -294,7 +285,7 @@ test__sort_field_parameters = {'type': 'time',
                               'sql': '${TABLE}.created_at_est', 
                               'label': 'My Label',
                               'name': 'created_at_est'}
-# print(sort_field_parameters(test__sort_field_parameters))
+# try it: print(sort_field_parameters(test__sort_field_parameters))
 
 
 
