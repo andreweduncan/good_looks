@@ -123,7 +123,7 @@ def extract_view_headers(loaded_lkml):
 ##      3. FIELD PARAMETER FUNCTIONS       ##
 #############################################
 
-def field_parameter_adjustments(dictionary):
+def field_parameter_adjustments(dictionary: dict) -> dict:
     ''' Used by sort_field_headers() to perform custom adjustments to the lkml field parameters.
     When using the lkml module to parse the view file, the lkml field paramaters 
     have several unexpected quirks.

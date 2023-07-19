@@ -119,7 +119,7 @@ testing.py
 
 #file containing the lkml view file(s) to be parsed
 original_view_files/*
-
+!test_file.view
 #complete reformatted view file contents
 reformatted_view_files/*
 

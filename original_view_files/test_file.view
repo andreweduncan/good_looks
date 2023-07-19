@@ -1,0 +1,124 @@
+# The name of this view in Looker is "dim_test_model"
+view: fct_reimb_line_item_values {
+
+  sql_table_name: `main_project.dbt.dim_test_model`
+    ;;
+
+  dimension: line_item_id {
+    type: number
+    sql: ${TABLE}.line_item_id ;;
+    primary_key: yes
+  }
+
+  dimension: line_item_total_price {
+    type: number
+    hidden: yes
+    value_format_name: usd
+    sql: ${TABLE}.line_item_total_price ;;
+  }
+
+  measure: line_item_total_price_sum {
+    type: sum
+    value_format_name: usd
+    sql: ${line_item_total_price} ;;
+  }
+
+  dimension_group: original_order_completed_at_est {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    datatype: datetime
+    convert_tz: no
+    sql: ${TABLE}.original_order_completed_at_est ;;
+  }
+
+  dimension: product_id {
+    type: number
+    sql: ${TABLE}.product_id ;;
+  }
+
+  dimension: product_name {
+    type: string
+    sql: ${TABLE}.product_name ;;
+  }
+
+  dimension: quantity_approved {
+    type: number
+    hidden:  yes
+    sql: ${TABLE}.quantity_approved ;;
+  }
+
+  measure: sum_quantity_approved {
+    type:  sum
+    description: "Sum quantity of items approved for refund or replacement"
+    sql: ${quantity_approved} ;;
+  }
+
+  dimension_group: reimbursement_request_created_at_est {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    datatype: datetime
+    convert_tz: no
+    sql: ${TABLE}.reimbursement_request_created_at_est ;;
+  }
+
+  dimension: reimbursement_request_id {
+    type: number
+    sql: ${TABLE}.reimbursement_request_id ;;
+  }
+
+  dimension: reimbursement_request_item_id {
+    type: number
+    sql: ${TABLE}.reimbursement_request_item_id ;;
+  }
+
+  dimension: reimbursement_type_approved {
+    type: string
+    sql: ${TABLE}.reimbursement_type_approved ;;
+  }
+
+  dimension: return_reason {
+    type: string
+    sql: ${TABLE}.return_reason ;;
+  }
+
+  dimension: return_reason_id {
+    type: number
+    sql: ${TABLE}.return_reason_id ;;
+  }
+
+  dimension: supplier_name {
+    type: string
+    sql: ${TABLE}.supplier_name ;;
+  }
+
+  dimension: taxon_name {
+    type: string
+    sql: ${TABLE}.taxon_name ;;
+  }
+
+  dimension: variant_id {
+    type: number
+    sql: ${TABLE}.variant_id ;;
+  }
+
+  dimension: variant_name {
+    type: string
+    sql: ${TABLE}.variant_name ;;
+  }
+}
