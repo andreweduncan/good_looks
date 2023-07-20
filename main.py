@@ -65,19 +65,19 @@ lkml_field_parameters_order = [
 # field_name  |  lkml_field_header_name  |  loaded_lkml_dict_key_name
 # these are packed into tuples because sometimes the values need crossed referenced against 
 # each other, for determining things like printing headers.
-def field_types():
+def field_types() -> list:
     field_type_list = []
     for field in field_types_info:
         field_type_list.append(field[0])
     return field_type_list
 
-def loaded_lkml_dict_key_name():
+def loaded_lkml_dict_key_name() -> list:
     loaded_lkml_dict_key_name_list = []
     for field_header_name in field_types_info:
         loaded_lkml_dict_key_name_list.append(field_header_name[1])
     return loaded_lkml_dict_key_name_list
 
-def lkml_field_header_names():
+def lkml_field_header_names() -> list:
     lkml_field_header_name_list = []
     for field_header_name in field_types_info:
         lkml_field_header_name_list.append(field_header_name[2])
@@ -94,7 +94,7 @@ def lkml_field_header_names():
 
 # https://candlescience.slab.com/posts/look-ml-standards-vwd6xr1z#:~:text=2-,Ordering,-of%20dimensions%3A
 # removes and writes view headers to new file 
-def extract_view_headers(loaded_lkml):
+def extract_view_headers(loaded_lkml: dict) -> str:
     ''' - remove the view file header elements from the loaded_lkml dictionary, 
         - format them, 
         - write the result to 'header_string' variable. 
@@ -144,7 +144,7 @@ def field_parameter_adjustments(dictionary: dict) -> dict:
             dictionary[key] = f"[{', '.join(value)}]"
     return dictionary
 
-def sort_field_parameters(field):
+def sort_field_parameters(field: dict) -> tuple[str, dict]:
     '''this function correctly orders the dimensions in a looker field according to the CS style guide.
     Be aware that the field name itself is also contained in this dictionary at the end, and will
     need to be extracted out. '''
@@ -164,7 +164,7 @@ def sort_field_parameters(field):
 ##     4. FIELD ORGANIZATION FUNCTIONS     ##
 #############################################
 
-def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name,lkml_field_name):
+def sort_field_type(loaded_lkml_dict_key_name: str, lkml_field_header_name: str, lkml_field_name: str) -> str:
     '''This function accesses the entire dictionary of a given field type,
     and performs several sorting and grouping operations.
 
@@ -189,7 +189,7 @@ def sort_field_type(loaded_lkml_dict_key_name,lkml_field_header_name,lkml_field_
     return body_string
 
 
-def centered_header(field, header_length = 26):
+def centered_header(field: str, header_length:int = 26) -> str:
     '''This is a function that prints a centered header for a field type in the lkml.
     The actual program uses this by calling the function with the field type as the input
     based on whether a given field type is present in the lkml file.
@@ -214,7 +214,7 @@ def centered_header(field, header_length = 26):
     return header
 
 
-def create_view_body(loaded_lkml):
+def create_view_body(loaded_lkml: dict) -> str:
     ''' create_view_body handles the organization of all fields in the view file.
     If a loaded_lkml dictionary key is found that matches a field type name
     from field_types_info, it calls sort_field_type to sort the fields of that type,
