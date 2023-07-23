@@ -110,6 +110,12 @@ def extract_view_headers(loaded_lkml: dict) -> str:
     for key in view_headers:
         if key == 'sql_table_name':
             view_headers[key] = value + " ;;"
+        elif key == 'derived_table':
+            value =  '\n  sql: ' + loaded_lkml['derived_table']['sql']
+            view_headers[key] = value + "\n;;"
+# print(loaded_lkml['derived_table']['sql'])
+# this motherfucker is a nested dictionary.
+# if the key is "derived_table", we have to dig one layer deeper for the header
     result = ""
     for key, value in view_headers.items(): #create correctly formatted view file header string
         result += f"  {key}: {value}\n"
@@ -265,7 +271,7 @@ def main(loaded_lkml):
 
 
 # comment out for testing
-view_file_name = input('\nPlease enter the name of the view file in the original_view_files folder:')
+view_file_name = input('\nPlease enter the name of the view file in the original_view_files folder: ')
 loaded_lkml = read_lookml_file()
 if type(loaded_lkml) == dict:
     main(loaded_lkml)
@@ -273,7 +279,7 @@ else: print('\n' + centered_header('exiting program'))
 
 
 #uncomment out for testing
-# view_file_name = 'test_fle'
+# view_file_name = 'test_file'
 # loaded_lkml = read_lookml_file()
 # if type(loaded_lkml) == dict:
 #     main(loaded_lkml)
