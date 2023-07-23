@@ -241,33 +241,41 @@ def read_lookml_file():
         with open(f'original_view_files/{view_file_name}.view', "r") as file:
             loaded_lkml = lkml.load(file.read())['views'][0]
             return loaded_lkml
-    except FileNotFoundError:
-        error_message = "The program expects a view file located inside 'lookml_string_file.txt'. "
-        error_message += "Please add 'lookml_string_file.txt' to this folder and rerun the program."
+    except:
+        error_message = f'''\nThere is no view file inside the 'original_view_files' folder named '{view_file_name}.view'. Please add this file and rerun the program.'''
+        print(error_message)
         return error_message
 
 
 
 def main(loaded_lkml):
+    if type(loaded_lkml) == dict:
     # extract and format view file headers
-    body = create_view_body(loaded_lkml)
-    header = extract_view_headers(loaded_lkml)
-    footer = '}'
-    formatted_view = header + body + footer
-    with open(f'reformatted_view_files/{view_file_name}.view', 'w') as file:
-        file.write(formatted_view)
-    print(formatted_view)
+        body = create_view_body(loaded_lkml)
+        header = extract_view_headers(loaded_lkml)
+        footer = '}'
+        formatted_view = header + body + footer
+        with open(f'reformatted_view_files/{view_file_name}.view', 'w') as file:
+            file.write(formatted_view)
+        print(formatted_view)
+    else:
+        EnvironmentError
 
 
 # comment out for testing
-view_file_name = input('please enter the name of the view file in the original_view_files folder:')
+view_file_name = input('\nPlease enter the name of the view file in the original_view_files folder:')
 loaded_lkml = read_lookml_file()
-main(loaded_lkml)
+if type(loaded_lkml) == dict:
+    main(loaded_lkml)
+else: print('\n' + centered_header('exiting program'))
+
 
 #uncomment out for testing
-# view_file_name = 'sample_view_file'
+# view_file_name = 'test_fle'
 # loaded_lkml = read_lookml_file()
-# main(loaded_lkml)
+# if type(loaded_lkml) == dict:
+#     main(loaded_lkml)
+# else: print('\n' + centered_header('exiting program'))
 
 
 ################################
