@@ -36,12 +36,12 @@ Each tuple uses the following format:
 field_name  |  loaded_lkml_dict_key_name   |  lkml_field_header_name  
 '''
 field_types_info = (
+    ("filter", "filters", "PARAMETERS / FILTERS"), #not actual field types
     ("dimension_group", "dimension_groups", "DIMENSION GROUPS"),
     ("dimension", "dimensions", "DIMENSIONS"),
     ("measure", "measures", "MEASURES"),
     ("N/A", "primary_key", "PRIMARY KEY"), #not actual field types
-    ("N/A", "parameters_and_filters", "PARAMETERS / FILTERS"), #not actual field types
-    ("N/A", "sets", "SETS") #not actual field types
+    ("set", "sets", "SETS") #not actual field types
     )
 
 # Controls the ordering of field parameters. Field parameters in the final view will 

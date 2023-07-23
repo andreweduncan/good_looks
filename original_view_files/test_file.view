@@ -1,6 +1,21 @@
 view: sp_test_shipment_data {
     sql_table_name: `main_project.dbt.dim_test_model`
     ;;
+
+  
+  set: my_first_set {
+    fields: [
+      dimension_one,
+      another_view.dimension_two,
+      measure_one
+    ]
+  }
+
+  filter: previous_period_filter {
+    type: date
+    description: "Date filter used in conjuction with Comparison Period dimensions"
+  }
+
   dimension: test_run_name {
     type: string
     sql: ${TABLE}.test_run_name ;;
