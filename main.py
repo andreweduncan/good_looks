@@ -107,7 +107,9 @@ def extract_view_headers(loaded_lkml: dict) -> str:
             view_headers[key] = value
     view_name = view_headers['name'] #extract and remove name
     del view_headers['name']
-    view_headers['sql_table_name'] = view_headers['sql_table_name'] + ' ;;' #add semicolons  
+    for key in view_headers:
+        if key == 'sql_table_name':
+            view_headers[key] = value + " ;;"
     result = ""
     for key, value in view_headers.items(): #create correctly formatted view file header string
         result += f"  {key}: {value}\n"
