@@ -1,0 +1,1 @@
+(☞ ͡° ͜ʖ ͡°)☞ git doesnt like keeping empty folders. This file allows us to keep the 'reformatted_view_files' folder.
