@@ -123,7 +123,7 @@ def extract_view_headers(loaded_lkml: dict) -> str:
 ##      3. FIELD PARAMETER FUNCTIONS       ##
 #############################################
 
-def field_parameter_adjustments(dictionary: dict) -> dict:
+def custom_field_parameter_tweaks(dictionary: dict) -> dict:
     ''' Used by sort_field_headers() to perform custom adjustments to the lkml field parameters.
     When using the lkml module to parse the view file, the lkml field paramaters 
     have several unexpected quirks.
@@ -152,7 +152,7 @@ def sort_field_parameters(field: dict) -> tuple[str, dict]:
     del field['name']
     sorted_keys = sorted(field.keys(), key=lambda k: lkml_field_parameters_order.index(k) if k in lkml_field_parameters_order else len(lkml_field_parameters_order))
     sorted_field_parameters_dict = {key: field[key] for key in sorted_keys}
-    adjusted_field_parameters = field_parameter_adjustments(sorted_field_parameters_dict) #add small adjustments to fields
+    adjusted_field_parameters = custom_field_parameter_tweaks(sorted_field_parameters_dict) #add small adjustments to fields
     return field_name, adjusted_field_parameters
 
 #############################################
@@ -274,9 +274,9 @@ main(loaded_lkml)
 ##  FUNCTION TEST VARIABLES   ##
 ################################
 
-#field_parameter_adjustments
-test__field_parameter_adjustments = {'type': 'time', 'timeframes': ['raw', 'time', 'date', 'week', 'month', 'quarter', 'year'], 'sql': '${TABLE}.created_at_est', 'datatype': 'datetime'}
-# try it: print(field_parameter_adjustments(test__field_parameter_adjustments))
+#custom_field_parameter_tweaks
+test__custom_field_parameter_tweaks = {'type': 'time', 'timeframes': ['raw', 'time', 'date', 'week', 'month', 'quarter', 'year'], 'sql': '${TABLE}.created_at_est', 'datatype': 'datetime'}
+# try it: print(custom_field_parameter_tweaks(test__custom_field_parameter_tweaks))
 
 #sort_field_parameters
 test__sort_field_parameters = {'type': 'time', 
