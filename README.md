@@ -131,6 +131,11 @@ such as:
    1. ~~double semicolons not on the same line~~ (Not needed - we add semicolons in via a function)
    2. datetime fields that contain the word "time" already in the name </br>
 </br></br>
+- [ ] finish type hinting on functions
+- [ ] reorganize how the functions interact with each other for easier troubleshooting</br>
+   This could go a few different ways, but right now I'm thinking considering having the program
+   rebuild the loaded_lkml dictionary with the reformatted version to keep it in an identical structure,
+   and then have dedicated functions to rewrite that structure into a final lkml file.
 Thats it folks, thats the plan for now.
 </br></br>
 
