@@ -1,4 +1,6 @@
 import lkml
+import re
+import pandas as pd
 
 '''
 CODE SECTIONS:
@@ -15,6 +17,8 @@ CODE SECTIONS:
 4. FIELD ORGANIZATION FUNCTIONS
 
 MAIN()
+
+5. TESTING
 
 Function testing variables are available at the end of the file. 
 I dont know how to implement unit and integration testing yet, so if you know
@@ -269,6 +273,50 @@ def main(loaded_lkml):
     else:
         EnvironmentError
 
+#############################################
+##                  TESTING                ##
+#############################################
+
+def regex_field_checker(file_path: str, regex_pattern: str):
+    matches = []
+    with open(file_path, "r") as file:
+        for line in file:
+            line = line.strip()  # Remove leading/trailing whitespace and newline characters
+            match = re.search(regex_pattern, line)
+            if match:
+                field_type = match.group(1)  # First capturing group
+                field_name = match.group(2)  # Second capturing group
+                matches.append({'field_type': field_type, 'field_name': field_name})
+
+    if matches:
+        df = pd.DataFrame(matches, columns=['field_type', 'field_name'])
+        df = df.sort_values(by=['field_type', 'field_name'], ascending=True, inplace=False)
+        return df
+    else:
+        print("No matches found.")
+        return None
+
+def field_comparison_test(view_file_name):
+    ''' Compare the fields found in the raw and processed view files for accuracy.
+    '''
+    regex_pattern = r"(dimension|dimension_group|measure|set|filter):\s+?(\S+)\s+?(?={)"
+    original_view_file = f'original_view_files/{view_file_name}.view'
+    reformatted_view_file = f'reformatted_view_files/{view_file_name}.view'
+    raw_df = regex_field_checker(original_view_file, regex_pattern).reset_index(drop=True)
+    reformatted_df = regex_field_checker(reformatted_view_file, regex_pattern).reset_index(drop=True)
+    if raw_df.equals(reformatted_df):
+        print("Complete!\nPrinting Field Summary Statistics...")
+        field_counts = raw_df['field_type'].value_counts().reset_index()
+        field_counts.columns = ['field_type', 'count']
+        field_counts = field_counts.sort_values(by='count', ascending=False)
+        print(field_counts)
+    else:
+        differences = raw_df.compare(reformatted_df)
+        result = differences if not differences.empty else "No differences"
+        print(f"found some fields not handled correctly by the program. printing differences:")
+        print(result)
+
+
 
 # comment out for testing
 view_file_name = input('\nPlease enter the name of the view file in the original_view_files folder: ')
@@ -276,6 +324,7 @@ loaded_lkml = read_lookml_file()
 if type(loaded_lkml) == dict:
     main(loaded_lkml)
 else: print('\n' + centered_header('exiting program'))
+field_comparison_test(view_file_name)
 
 
 #uncomment out for testing
