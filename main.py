@@ -248,15 +248,13 @@ def create_view_body(loaded_lkml: dict) -> str:
 #############################################
 
 
-def read_lookml_file():
+def read_lookml_file() -> dict:
     try:
         with open(f'original_view_files/{view_file_name}.view', "r") as file:
             loaded_lkml = lkml.load(file.read())['views'][0]
             return loaded_lkml
     except:
-        error_message = f'''\nThere is no view file inside the 'original_view_files' folder named '{view_file_name}.view'. Please add this file and rerun the program.'''
-        print(error_message)
-        return error_message
+        raise RuntimeError(f'''\nThere is no view file inside the 'original_view_files' folder named '{view_file_name}.view'. Please add this file and rerun the program.''')
 
 
 
