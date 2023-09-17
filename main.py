@@ -105,24 +105,23 @@ def extract_view_headers(loaded_lkml: dict) -> str:
         - By design, this captures ANY keys not in the field_types() function
           so if you have any weirdness in the operation it will appear in the header.'''
     lkml_field_dict_keys = loaded_lkml_dict_key_name()
+    # create dictionary of key value paris not in the field types list
     view_headers = {}
     for key, value in loaded_lkml.items(): #find keys not in field types dict
         if key not in lkml_field_dict_keys:
-            view_headers[key] = value
+            if key == 'sql_table_name':
+                view_headers[key] = value + " ;;"
+            elif key == 'derived_table':
+                value =  '\n  sql: ' + loaded_lkml['derived_table']['sql']
+                view_headers[key] = value + "\n;;"
+            else:
+                view_headers[key] = value
     view_name = view_headers['name'] #extract and remove name
     del view_headers['name']
-    for key in view_headers:
-        if key == 'sql_table_name':
-            view_headers[key] = value + " ;;"
-        elif key == 'derived_table':
-            value =  '\n  sql: ' + loaded_lkml['derived_table']['sql']
-            view_headers[key] = value + "\n;;"
-# print(loaded_lkml['derived_table']['sql'])
-# this motherfucker is a nested dictionary.
-# if the key is "derived_table", we have to dig one layer deeper for the header
     result = ""
     for key, value in view_headers.items(): #create correctly formatted view file header string
         result += f"  {key}: {value}\n"
+        print(f'printing result: {result}')
         header_string = f'view: {view_name}' + ' {\n' + result + '\n'
     return header_string
 
