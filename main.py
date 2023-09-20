@@ -52,15 +52,19 @@ field_types_info = (
 # be sorted in this order. Parameters not listed will be added at the end.
 lkml_field_parameters_order = [
     'label', 
+    'group_item_label',
+    'group_label', 
     'description', 
     'type', 
     'timeframes', 
     'sql', 
+    'filters',
+    'map_layer_name',
+    'sql_distinct_key',
     'convert_tz', 
     'value_format_name', 
     'html', 
     'drill_fields', 
-    'group_label', 
     'primary_key', 
     'hidden']
 
@@ -145,7 +149,7 @@ def custom_field_parameter_tweaks(dictionary: dict) -> dict:
     # add double quotes around descriptions
     for key, value in dictionary.items():
     # some field parameters require double quotes
-        if key in ["description","label"]: 
+        if key in ["description","label","group_label", "value_format"]: 
             dictionary[key] = '"' + value + '"'
     # sql-related fields should be ended by double semicolons
         elif key in ['sql','sql_latitude','sql_longitude','sql_on','sql_distinct_key']: 
