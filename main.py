@@ -33,11 +33,18 @@ teclado's Python course.
 #############################################
 
 '''
-this contains a list of field types used to create the body of the view file,
-the field type headers, and to reconstruct the lkml for the individual fields.
-field_types_info is a nested tuple containing looker field type information for the program. 
+Each tuple represents a field type and contains three important aspects of that field that are used
 Each tuple uses the following format:
 field_name  |  loaded_lkml_dict_key_name   |  lkml_field_header_name  
+
+1. field_name: This is the name of the actual field type in looker.
+2. key name: When the lookml module parses a view file into a dictionary, this is the key value this field type will be found under.
+3. lkml_field_header_name: This is a custom CS AE standard. We organize all fields in a view  of a given type under a custom header.
+This is the name that will be printed inside the header for that field type. 
+Here is an example field header for dimensions:
+  ##########################
+  ##      DIMENSIONS      ##
+  ##########################
 '''
 field_types_info = (
     ("filter", "filters", "PARAMETERS / FILTERS"), #not actual field types
