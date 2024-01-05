@@ -68,6 +68,7 @@ lkml_field_parameters_order = [
     'filters',
     'map_layer_name',
     'sql_distinct_key',
+    'datatype',
     'convert_tz', 
     'value_format_name', 
     'html', 
